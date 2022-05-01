@@ -48,22 +48,23 @@ async function sync(dir: string, cache: Map<string, [string, string]>) {
     cache.clear();
 
     try {
-        const fn = path.resolve(dir || ".", "prebuilt.json");
+        const fn = path.resolve(dir || ".", "primer.json");
         const content = await fs.readFile(fn, "utf-8");
         const entires = JSON.parse(content);
         for (const [key, value] of Object.entries(entires)) {
-            cache.set(key, value as [string, string]);
+            const fn = path.resolve(dir, key);
+            cache.set(fn, value as [string, string]);
         }
     } catch {
         // don't care
     }
 }
 
-function hashIt(cache: Map<string, [string, string]>) {
+function hashIt(dir: string, cache: Map<string, [string, string]>) {
     const items = [];
     const keys = [...cache.keys()].sort();
     for (const key of keys) {
-        items.push(key, cache.get(key));
+        items.push(relative(dir, key), cache.get(key));
     }
 
     const hasher = crypto.createHash("sha256");
@@ -96,7 +97,7 @@ class NameTable extends Map<string, string> {
 }
 
 const empty: undefined[] = [];
-const xlinker = /^\0(.*)\?x-linker$/;
+const xlinker = /^\0(.*)\?x-linker\d+$/;
 
 export function linker(dir: string, cmd: string): Plugin {
     dir = path.resolve(dir);
@@ -177,7 +178,7 @@ export function linker(dir: string, cmd: string): Plugin {
                 await sync(dir, cache);
             }
 
-            sig = hashIt(cache);
+            sig = hashIt(dir, cache);
         },
 
         augmentChunkHash() {
@@ -198,7 +199,7 @@ export function linker(dir: string, cmd: string): Plugin {
                             const entry = cache.get(ref);
                             if (entry !== undefined) {
                                 binding = `{ ${entry[1]} as ${name} }`;
-                                fn = path.resolve(dir, binding[0]);
+                                fn = path.resolve(dir, entry[0]);
                             }
 
                             if (!binding) {
@@ -207,6 +208,10 @@ export function linker(dir: string, cmd: string): Plugin {
 
                             const base = path.resolve(opts.dir || ".", key);
                             fn = relative(path.dirname(base), fn);
+
+                            if (!fn.startsWith("../")) {
+                                fn = `./${fn}`;
+                            }
 
                             if (entry === undefined) {
                                 console.warn("Can't find pre-built:", fn);

@@ -100,7 +100,7 @@ function primer(dir: string): Plugin {
 
             this.emitFile({
                 type: "asset",
-                fileName: "prebuilt.json",
+                fileName: "primer.json",
                 source: JSON.stringify(result, undefined, 4),
             });
         }
