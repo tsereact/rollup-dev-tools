@@ -1,0 +1,41 @@
+{
+    "name": "@tsereact/rollup-dev-tools",
+    "version": "1.0.0",
+    "peerDependencies": {
+        "rollup": "^2.71.1"
+    },
+    "exports": {
+        "./plugins/check-imports": {
+            "module": "./dist/plugins/check-imports/index.mjs",
+            "require": "./dist/plugins/check-imports/index.Cjs",
+            "default": "./dist/plugins/check-imports/index.Cjs"
+        },
+        "./plugins/hook": {
+            "module": "./dist/plugins/hook/index.mjs",
+            "require": "./dist/plugins/hook/index.Cjs",
+            "default": "./dist/plugins/hook/index.Cjs"
+        },
+        "./plugins/manual-checks": {
+            "module": "./dist/plugins/manual-checks/index.mjs",
+            "require": "./dist/plugins/rmanual-checks/index.Cjs",
+            "default": "./dist/plugins/manual-checks/index.Cjs"
+        },
+        "./plugins/run": {
+            "module": "./dist/plugins/run/index.mjs",
+            "require": "./dist/plugins/run/index.Cjs",
+            "default": "./dist/plugins/run/index.Cjs"
+        },
+        "./*": {
+            "module": "./dist/*.mjs",
+            "require": "./dist/*.cjs",
+            "default": "./dist/*.cjs"
+        }
+    },
+    "typesVersions": {
+        "*": {
+            "*": [
+                "dist/*"
+            ]
+        }
+    }
+}

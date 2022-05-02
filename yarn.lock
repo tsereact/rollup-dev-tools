@@ -358,6 +358,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsereact/rollup-dev-tools@workspace:packages/rollup-dev-tools":
+  version: 0.0.0-use.local
+  resolution: "@tsereact/rollup-dev-tools@workspace:packages/rollup-dev-tools"
+  peerDependencies:
+    rollup: ^2.71.1
+  languageName: unknown
+  linkType: soft
+
 "@tsereact/rollup-plugin-check-imports@workspace:packages/rollup-plugin-check-imports":
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-check-imports@workspace:packages/rollup-plugin-check-imports"

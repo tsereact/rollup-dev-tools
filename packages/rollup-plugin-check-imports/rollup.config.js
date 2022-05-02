@@ -36,8 +36,8 @@ export default defineConfig({
             hook: "closeBundle",
             targets: [
                 {
-                    src: "dist/*{.d.ts,.mjs}",
-                    dest: "../../dist/rollup-plugin-check-imports"
+                    src: "dist/*",
+                    dest: "../rollup-dev-tools/dist/plugins/check-imports",
                 }
             ]
         })

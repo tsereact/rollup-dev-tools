@@ -36,8 +36,8 @@ export default defineConfig({
             hook: "closeBundle",
             targets: [
                 {
-                    src: "dist/*{.d.ts,.mjs}",
-                    dest: "../../rollup-plugin-manual-chunks"
+                    src: "dist/*",
+                    dest: "../rollup-dev-tools/dist/plugins/manual-chunks"
                 }
             ]
         })
