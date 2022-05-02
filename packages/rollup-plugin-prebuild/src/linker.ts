@@ -27,17 +27,21 @@ function relative(from: string, to: string) {
 }
 
 function vendorOf(id: string) {
+    if (id[0] === "\0") {
+        return false;
+    }
+
     id = slashify(id);
     
     const [, suffix] = id.split("/node_modules/");
     if (suffix) {
         const [scope, name] = suffix.split("/");
-        if (scope && name) {
-            if (scope[0] === "@") {
-                return `${scope}/${name}`;
-            }
-        
+        if (scope && scope[0] !== "@") {
             return scope;
+        }
+
+        if (name) {
+            return `${scope}/${name}`;
         }
     }
 

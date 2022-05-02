@@ -7,17 +7,21 @@ function slashify(value: string) {
 }
 
 function vendorOf(id: string) {
+    if (id[0] === "\0") {
+        return false;
+    }
+
     id = slashify(id);
     
     const [, suffix] = id.split("/node_modules/");
     if (suffix) {
         const [scope, name] = suffix.split("/");
-        if (scope && name) {
-            if (scope[0] === "@") {
-                return `${scope}/${name}`;
-            }
-        
+        if (scope && scope[0] !== "@") {
             return scope;
+        }
+
+        if (name) {
+            return `${scope}/${name}`;
         }
     }
 
@@ -66,7 +70,7 @@ function checkImports(): Plugin {
             const { id, dynamicallyImportedIds, importedIds } = info;
             if (id[0] !== "\0" && !vendorOf(id)) {
                 for (const id of new Set([...dynamicallyImportedIds, ...importedIds])) {
-                    const vendor = id[0] !== "\0" && vendorOf(id);
+                    const vendor = vendorOf(id);
                     if (vendor && !vendors.has(vendor)) {
                         const importer = slashify(relative(process.cwd(), info.id));
                         this.warn(`${importer} uses ${vendor}: Fix code or add the package.`);

@@ -1,6 +1,7 @@
 import { isAbsolute } from "path";
 import { defineConfig } from "rollup";
 
+import copy from "rollup-plugin-copy";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
 
@@ -32,6 +33,15 @@ export default defineConfig({
     plugins: [
         nodeResolve(),
         typescript(),
+        copy({
+            hook: "closeBundle",
+            targets: [
+                {
+                    src: "dist/*{.d.ts,.mjs}",
+                    dest: "../../dist/rollup-plugin-prebuild"
+                }
+            ]
+        })
     ],
     watch: {
         include: "src/**"
