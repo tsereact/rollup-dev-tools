@@ -1,0 +1,13 @@
+{
+    "name": "@experiments/sandbox",
+    "version": "1.0.0",
+    "devDependencies": {
+        "rollup": "^2.71.1"
+    },
+    "peerDependencies": {
+        "rollup": "^2.71.1"
+    },
+    "scripts": {
+        "build": "rollup -c rollup.config.js"
+    }
+}

@@ -6,27 +6,27 @@
     },
     "exports": {
         "./plugins/check-imports": {
-            "module": "./dist/plugins/check-imports/index.mjs",
-            "require": "./dist/plugins/check-imports/index.Cjs",
-            "default": "./dist/plugins/check-imports/index.Cjs"
+            "import": "./dist/plugins/check-imports/index.mjs",
+            "require": "./dist/plugins/check-imports/index.cjs",
+            "default": "./dist/plugins/check-imports/index.cjs"
         },
         "./plugins/hook": {
-            "module": "./dist/plugins/hook/index.mjs",
-            "require": "./dist/plugins/hook/index.Cjs",
-            "default": "./dist/plugins/hook/index.Cjs"
+            "import": "./dist/plugins/hook/index.mjs",
+            "require": "./dist/plugins/hook/index.cjs",
+            "default": "./dist/plugins/hook/index.cjs"
         },
         "./plugins/manual-checks": {
-            "module": "./dist/plugins/manual-checks/index.mjs",
-            "require": "./dist/plugins/rmanual-checks/index.Cjs",
-            "default": "./dist/plugins/manual-checks/index.Cjs"
+            "import": "./dist/plugins/manual-checks/index.mjs",
+            "require": "./dist/plugins/rmanual-checks/index.cjs",
+            "default": "./dist/plugins/manual-checks/index.cjs"
         },
         "./plugins/run": {
-            "module": "./dist/plugins/run/index.mjs",
-            "require": "./dist/plugins/run/index.Cjs",
-            "default": "./dist/plugins/run/index.Cjs"
+            "import": "./dist/plugins/run/index.mjs",
+            "require": "./dist/plugins/run/index.cjs",
+            "default": "./dist/plugins/run/index.cjs"
         },
         "./*": {
-            "module": "./dist/*.mjs",
+            "import": "./dist/*.mjs",
             "require": "./dist/*.cjs",
             "default": "./dist/*.cjs"
         }

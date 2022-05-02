@@ -13,12 +13,12 @@
     },
     "exports": {
         ".": {
-            "module": "./dist/index.mjs",
+            "import": "./dist/index.mjs",
             "require": "./dist/index.cjs",
             "default": "./dist/index.cjs"
         },
         "./*": {
-            "module": "./dist/*.mjs",
+            "import": "./dist/*.mjs",
             "require": "./dist/*.cjs",
             "default": "./dist/*.cjs"
         }

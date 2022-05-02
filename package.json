@@ -32,8 +32,8 @@
     "xterm-addon-webgl": "^0.11.4"
   },
   "scripts": {
-    "build": "yarn workspaces foreach -pv --include '@tsereact/*' exec rollup -c rollup.config.js",
-    "build:watch": "yarn workspaces foreach -ipv --include '@tsereact/*' exec rollup -c rollup.config.js --watch"
+    "build": "yarn workspaces foreach -pv --include '@tsereact/rollup-plugin-*' exec rollup -c rollup.config.js",
+    "build:watch": "yarn workspaces foreach -ipv --include '@tsereact/rollup-plugin-*' exec rollup -c rollup.config.js --watch"
   },
   "dependencies": {
     "@rollup/plugin-json": "^4.1.0"
