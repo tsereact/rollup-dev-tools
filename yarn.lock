@@ -191,6 +191,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@experiments/react-hmr@workspace:experiments/react-hmr":
+  version: 0.0.0-use.local
+  resolution: "@experiments/react-hmr@workspace:experiments/react-hmr"
+  dependencies:
+    "@emotion/react": ^11.9.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    rollup: ^2.71.1
+  peerDependencies:
+    rollup: ^2.71.1
+  languageName: unknown
+  linkType: soft
+
 "@experiments/sandbox@workspace:experiments/sandbox":
   version: 0.0.0-use.local
   resolution: "@experiments/sandbox@workspace:experiments/sandbox"
@@ -269,6 +281,15 @@ __metadata:
   peerDependencies:
     rollup: ^2.68.0
   checksum: fdcce2bf58875fde0e06f001544c0d9a0509a12929393862f72dcef8fcbf4d5d0ba0d5db6cf10ba4351335caf67a3dbdb95000678c468585e3972994f92e2ce9
+  languageName: node
+  linkType: hard
+
+"@rollup/plugin-html@npm:^0.2.4":
+  version: 0.2.4
+  resolution: "@rollup/plugin-html@npm:0.2.4"
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0
+  checksum: 63a644f13a855e1bd7bcc6a3aa12b894a2e50cc0ebd07f124e619987cc67483271d118f0875a945e531ece9dc92ab2166b223e2ea0cb3dd694b08987fbda911e
   languageName: node
   linkType: hard
 
@@ -2051,6 +2072,7 @@ __metadata:
   dependencies:
     "@emotion/react": ^11.9.0
     "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
     "@rollup/plugin-json": ^4.1.0
     "@rollup/plugin-node-resolve": ^13.2.1
     "@rollup/plugin-replace": ^4.0.0

@@ -8,6 +8,8 @@
   "devDependencies": {
     "@emotion/react": "^11.9.0",
     "@rollup/plugin-commonjs": "^22.0.0",
+    "@rollup/plugin-html": "^0.2.4",
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.2.1",
     "@rollup/plugin-replace": "^4.0.0",
     "@rollup/plugin-typescript": "^8.3.2",
@@ -16,6 +18,7 @@
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.3",
     "@types/serve-static": "^1.13.10",
+    "@types/ws": "^8.5.3",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "rollup": "^2.71.1",
@@ -29,15 +32,11 @@
     "xterm-addon-fit": "^0.5.0",
     "xterm-addon-unicode11": "^0.3.0",
     "xterm-addon-web-links": "^0.5.1",
-    "xterm-addon-webgl": "^0.11.4"
+    "xterm-addon-webgl": "^0.11.4",
+    "ws": "^8.6.0"
   },
   "scripts": {
-    "build": "yarn workspaces foreach -pv --include '@tsereact/rollup-plugin-*' exec rollup -c rollup.config.js",
-    "build:watch": "yarn workspaces foreach -ipv --include '@tsereact/rollup-plugin-*' exec rollup -c rollup.config.js --watch"
-  },
-  "dependencies": {
-    "@rollup/plugin-json": "^4.1.0",
-    "@types/ws": "^8.5.3",
-    "ws": "^8.6.0"
+    "build:plugins": "yarn workspaces foreach -ipv --include '@tsereact/rollup-plugin-*' exec rollup -c rollup.config.js",
+    "build:webdock": "yarn workspaces foreach -ipv --include '@tsereact/webdock' exec rollup -c rollup.config.js"
   }
 }

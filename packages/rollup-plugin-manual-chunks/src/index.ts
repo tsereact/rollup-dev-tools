@@ -29,6 +29,9 @@
 import type { Plugin } from "rollup";
 import path from "path";
 
+let silent = false;
+const cwd = path.normalize(path.resolve() + "/");
+
 function sizeOf(code: string) {
     return Buffer.byteLength(code, "utf-8");
 }
@@ -67,12 +70,72 @@ function vendorOf(id: string) {
     return false;
 }
 
-function match(id: string, dir: string) {
-    if (id.startsWith(dir)) {
+function resolve(id: string) {
+    if (id[0] === "\0") {
+        return false;
+    }
+
+    if (id.startsWith("npm:")) {
+        return id;
+    }
+
+    if (id.startsWith("src:")) {
+        return id;
+    }
+
+    const vendor = vendorOf(id);
+    if (vendor) {
+        return `npm:${vendor}`;
+    }
+
+    id = path.normalize(path.resolve(id) + "/");
+
+    if (id.startsWith(cwd)) {
+        id = id.substring(cwd.length);
+        id = slashify(id);        
+
+        return `src:${id}`;
+    }
+
+    return false;
+}
+
+function match(id: string | false, dir: string | false) {
+    if (!id || !dir) {
+        return false;
+    }
+
+    id = resolve(id);
+
+    if (!id) {
+        return false;
+    }
+
+    if (id === dir) {
+        return true;
+    }
+
+    if (dir === "npm:") {
+        return id.startsWith("npm:");
+    }
+
+    if (dir.startsWith("mpm:")) {
+        return id === dir;
+    }
+
+    if (dir === "src:") {
+        return id.startsWith("src:");
+    }
+
+    if (dir.startsWith("src:") && id.startsWith(dir)) {
         id = id.substring(dir.length);
 
-        const [ext, extra] = slashify(id).split("/");
-        return extra ? !ext : !path.extname(ext);
+        if (id[0] === "/") {
+            return true;
+        }
+
+        const [head, type, tail ] = id.split(".");
+        return head === "" && type && tail === undefined;
     }
 
     return false;
@@ -97,15 +160,13 @@ class NameSet extends Map<string, string> {
     }
 }
 
-let silent = false;
-
-function manualChunks(prefix: string, dirs: Record<string, string>): Plugin {
-    type Seed = [dir: string, name: string, queue: Set<string>];
+function manualChunks(dirs: Record<string, string>): Plugin {
+    type Seed = [dir: string | false, name: string, queue: Set<string>];
 
     const seeds = [] as Seed[];
     const names = new NameSet();
     for (const key in dirs) {
-        seeds.push([path.resolve(prefix, key), names.add(dirs[key]), new Set()]);
+        seeds.push([resolve(key), names.add(dirs[key]), new Set()]);
     }
 
     const chunks = new Map<string, string | false>();
@@ -136,7 +197,7 @@ function manualChunks(prefix: string, dirs: Record<string, string>): Plugin {
         renderStart() {
             chunks.clear();
             mapped.clear();
-
+            
             for (const [,, queue] of seeds) {
                 queue.clear();
             }
@@ -188,7 +249,7 @@ function manualChunks(prefix: string, dirs: Record<string, string>): Plugin {
             const vendors = new Set<string>();
             for (const id of queue) {
                 const info = this.getModuleInfo(id);
-                const vendor = !vendorOf(id);
+                const vendor = vendorOf(id);
                 if (info && !vendor) {
                     for (const id of info.dynamicallyImportedIds) {
                         queue.add(id);
@@ -200,10 +261,10 @@ function manualChunks(prefix: string, dirs: Record<string, string>): Plugin {
                 }
 
                 if (vendor) {
-                    vendors.add(id);
+                    vendors.add(vendor);
                 }
             }
-           
+
             for (const key in bundle) {
                 const chunk = bundle[key];
                 if (chunk.type === "chunk") {
