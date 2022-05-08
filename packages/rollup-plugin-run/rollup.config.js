@@ -37,7 +37,7 @@ export default defineConfig({
             targets: [
                 {
                     src: "dist/*",
-                    dest: "../rollup-dev-tools/dist/plugins/run"
+                    dest: "../rollup-dev-tools/dist/plugin-run"
                 }
             ]
         })

@@ -37,7 +37,7 @@ export default defineConfig({
             targets: [
                 {
                     src: "dist/*",
-                    dest: "../rollup-dev-tools/dist/plugins/manual-chunks"
+                    dest: "../rollup-dev-tools/dist/plugin-manual-chunks"
                 }
             ]
         })

@@ -38,7 +38,7 @@ export default defineConfig({
             targets: [
                 {
                     src: "dist/*",
-                    dest: "../rollup-dev-tools/dist/plugins/prebuild"
+                    dest: "../rollup-dev-tools/dist/plugin-prebuild"
                 }
             ]
         })

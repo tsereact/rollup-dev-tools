@@ -5,35 +5,113 @@
         "rollup": "^2.71.1"
     },
     "exports": {
-        "./plugins/check-imports": {
-            "import": "./dist/plugins/check-imports/index.mjs",
-            "require": "./dist/plugins/check-imports/index.cjs",
-            "default": "./dist/plugins/check-imports/index.cjs"
+        "./dist/plugin-check-imports/index.cjs": {
+            "default": "./dist/plugin-check-imports/index.cjs"
         },
-        "./plugins/hook": {
-            "import": "./dist/plugins/hook/index.mjs",
-            "require": "./dist/plugins/hook/index.cjs",
-            "default": "./dist/plugins/hook/index.cjs"
+        "./dist/plugin-check-imports/index.mjs": {
+            "default": "./dist/plugin-check-imports/index.mjs"
         },
-        "./plugins/manual-checks": {
-            "import": "./dist/plugins/manual-checks/index.mjs",
-            "require": "./dist/plugins/rmanual-checks/index.cjs",
-            "default": "./dist/plugins/manual-checks/index.cjs"
+        "./dist/plugin-hook/index.cjs": {
+            "default": "./dist/plugin-hook/index.cjs"
         },
-        "./plugins/run": {
-            "import": "./dist/plugins/run/index.mjs",
-            "require": "./dist/plugins/run/index.cjs",
-            "default": "./dist/plugins/run/index.cjs"
+        "./dist/plugin-hook/index.mjs": {
+            "default": "./dist/plugin-hook/index.mjs"
         },
-        "./*": {
-            "import": "./dist/*.mjs",
-            "require": "./dist/*.cjs",
-            "default": "./dist/*.cjs"
+        "./dist/plugin-manual-chunks/index.cjs": {
+            "default": "./dist/plugin-manual-chunks/index.cjs"
+        },
+        "./dist/plugin-manual-chunks/index.mjs": {
+            "default": "./dist/plugin-manual-chunks/index.mjs"
+        },
+        "./dist/plugin-prebuild/linker.cjs": {
+            "default": "./dist/plugin-prebuild/linker.cjs"
+        },
+        "./dist/plugin-prebuild/linker.mjs": {
+            "default": "./dist/plugin-prebuild/linker.mjs"
+        },
+        "./dist/plugin-prebuild/primer.cjs": {
+            "default": "./dist/plugin-prebuild/primer.cjs"
+        },
+        "./dist/plugin-prebuild/primer.mjs": {
+            "default": "./dist/plugin-prebuild/primer.mjs"
+        },
+        "./dist/plugin-run/index.cjs": {
+            "default": "./dist/plugin-run/index.cjs"
+        },
+        "./dist/plugin-run/index.mjs": {
+            "default": "./dist/plugin-run/index.mjs"
+        },
+        "./dist/plugin-sync-deps/index.cjs": {
+            "default": "./dist/plugin-sync-deps/index.cjs"
+        },
+        "./dist/plugin-sync-deps/index.mjs": {
+            "default": "./dist/plugin-sync-deps/index.mjs"
+        },
+        "./plugin-check-imports/index": {
+            "import": "./dist/plugin-check-imports/index.mjs",
+            "require": "./dist/plugin-check-imports/index.cjs",
+            "default": "./dist/plugin-check-imports/index.cjs"
+        },
+        "./plugin-hook/index": {
+            "import": "./dist/plugin-hook/index.mjs",
+            "require": "./dist/plugin-hook/index.cjs",
+            "default": "./dist/plugin-hook/index.cjs"
+        },
+        "./plugin-manual-chunks/index": {
+            "import": "./dist/plugin-manual-chunks/index.mjs",
+            "require": "./dist/plugin-manual-chunks/index.cjs",
+            "default": "./dist/plugin-manual-chunks/index.cjs"
+        },
+        "./plugin-prebuild/linker": {
+            "import": "./dist/plugin-prebuild/linker.mjs",
+            "require": "./dist/plugin-prebuild/linker.cjs",
+            "default": "./dist/plugin-prebuild/linker.cjs"
+        },
+        "./plugin-prebuild/primer": {
+            "import": "./dist/plugin-prebuild/primer.mjs",
+            "require": "./dist/plugin-prebuild/primer.cjs",
+            "default": "./dist/plugin-prebuild/primer.cjs"
+        },
+        "./plugin-run/index": {
+            "import": "./dist/plugin-run/index.mjs",
+            "require": "./dist/plugin-run/index.cjs",
+            "default": "./dist/plugin-run/index.cjs"
+        },
+        "./plugin-sync-deps/index": {
+            "import": "./dist/plugin-sync-deps/index.mjs",
+            "require": "./dist/plugin-sync-deps/index.cjs",
+            "default": "./dist/plugin-sync-deps/index.cjs"
+        },
+        "./plugin-check-imports": {
+            "import": "./dist/plugin-check-imports/index.mjs",
+            "require": "./dist/plugin-check-imports/index.cjs",
+            "default": "./dist/plugin-check-imports/index.cjs"
+        },
+        "./plugin-hook": {
+            "import": "./dist/plugin-hook/index.mjs",
+            "require": "./dist/plugin-hook/index.cjs",
+            "default": "./dist/plugin-hook/index.cjs"
+        },
+        "./plugin-manual-chunks": {
+            "import": "./dist/plugin-manual-chunks/index.mjs",
+            "require": "./dist/plugin-manual-chunks/index.cjs",
+            "default": "./dist/plugin-manual-chunks/index.cjs"
+        },
+        "./plugin-run": {
+            "import": "./dist/plugin-run/index.mjs",
+            "require": "./dist/plugin-run/index.cjs",
+            "default": "./dist/plugin-run/index.cjs"
+        },
+        "./plugin-sync-deps": {
+            "import": "./dist/plugin-sync-deps/index.mjs",
+            "require": "./dist/plugin-sync-deps/index.cjs",
+            "default": "./dist/plugin-sync-deps/index.cjs"
         }
     },
     "typesVersions": {
         "*": {
             "*": [
+                "dist/*/index",
                 "dist/*"
             ]
         }

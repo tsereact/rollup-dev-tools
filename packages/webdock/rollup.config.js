@@ -33,7 +33,7 @@ export default defineConfig({
     ],
 
     plugins: [
-        manualChunks("src/client", {
+        manualChunks("src/app", {
             "page": "common",
             "main": "client",
         }),

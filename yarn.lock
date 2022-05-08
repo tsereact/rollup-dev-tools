@@ -426,6 +426,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@tsereact/rollup-plugin-sync-deps@workspace:packages/rollup-plugin-sync-deps":
+  version: 0.0.0-use.local
+  resolution: "@tsereact/rollup-plugin-sync-deps@workspace:packages/rollup-plugin-sync-deps"
+  dependencies:
+    rollup: ^2.71.1
+  peerDependencies:
+    rollup: ^2.71.1
+  languageName: unknown
+  linkType: soft
+
 "@tsereact/webdock@workspace:packages/webdock":
   version: 0.0.0-use.local
   resolution: "@tsereact/webdock@workspace:packages/webdock"

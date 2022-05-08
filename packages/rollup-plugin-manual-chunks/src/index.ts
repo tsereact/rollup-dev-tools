@@ -188,24 +188,19 @@ function manualChunks(prefix: string, dirs: Record<string, string>): Plugin {
             const vendors = new Set<string>();
             for (const id of queue) {
                 const info = this.getModuleInfo(id);
-                if (info) {
+                const vendor = !vendorOf(id);
+                if (info && !vendor) {
                     for (const id of info.dynamicallyImportedIds) {
-                        const vendor = vendorOf(id);
-                        if (vendor) {
-                            vendors.add(vendor);
-                        } else {
-                            queue.add(id);
-                        }
+                        queue.add(id);
                     }
     
                     for (const id of info.importedIds) {
-                        const vendor = vendorOf(id);
-                        if (vendor) {
-                            vendors.add(vendor);
-                        } else {
-                            queue.add(id);
-                        }
+                        queue.add(id);
                     }
+                }
+
+                if (vendor) {
+                    vendors.add(id);
                 }
             }
            

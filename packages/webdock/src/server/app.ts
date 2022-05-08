@@ -7,7 +7,7 @@ import css from "xterm/css/xterm.css";
 import serveStatic from "serve-static";
 
 import { fileURLToPath } from "url";
-import { render } from "../client/page";
+import { render } from "../app/page";
 
 const root = fileURLToPath(new URL("./", import.meta.url));
 const serveFiles = serveStatic(root, {
@@ -37,7 +37,7 @@ function infer(url: string, loader: () => any) {
 async function app(req: http.IncomingMessage, res: http.ServerResponse) {
     if (req.url === "/") {
         if (page === undefined) {
-            const url = infer(import.meta.url, () => import("../client/main"));
+            const url = infer(import.meta.url, () => import("../app/main"));
             const script = await fs.readFile(fileURLToPath(url), "utf-8");
             page = ReactDOMServer.renderToString(render(css));
             page = `<!DOCTYPE html>\n${page}`;
