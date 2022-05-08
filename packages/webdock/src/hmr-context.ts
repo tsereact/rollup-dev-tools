@@ -11,7 +11,7 @@ function createGlobalStates(): Map<string, ModuleState> {
 
 const states = createGlobalStates();
 
-class ModuleState {
+export class ModuleState {
     readonly ready: boolean;
     state: any;
     ver: number;

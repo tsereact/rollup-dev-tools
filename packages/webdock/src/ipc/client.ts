@@ -64,7 +64,7 @@ async function setup() {
         ;}
 
         const sendChannel = new BroadcastChannel("webdock-request");
-        const send = sendChannel.postMessage.bind(channel);
+        const send = sendChannel.postMessage.bind(sendChannel);
         return push(send);
     }
 

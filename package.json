@@ -36,6 +36,8 @@
     "build:watch": "yarn workspaces foreach -ipv --include '@tsereact/rollup-plugin-*' exec rollup -c rollup.config.js --watch"
   },
   "dependencies": {
-    "@rollup/plugin-json": "^4.1.0"
+    "@rollup/plugin-json": "^4.1.0",
+    "@types/ws": "^8.5.3",
+    "ws": "^8.6.0"
   }
 }

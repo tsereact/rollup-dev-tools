@@ -1,6 +1,8 @@
 import type { Plugin } from "rollup";
 import type { HMR } from "./ipc/Message";
-import { pathToFileURL } from "url";
+
+import { readFile } from "fs/promises";
+import { fileURLToPath } from "url";
 
 import crypto from "crypto";
 import client from "./ipc/client";
@@ -23,28 +25,6 @@ function isSource(id: string) {
     return true;
 }
 
-function vendorOf(id: string) {
-    if (id[0] === "\0") {
-        return false;
-    }
-
-    id = slashify(id);
-    
-    const [, suffix] = id.split("/node_modules/");
-    if (suffix) {
-        const [scope, name] = suffix.split("/");
-        if (scope && scope[0] !== "@") {
-            return scope;
-        }
-
-        if (name) {
-            return `${scope}/${name}`;
-        }
-    }
-
-    return false;
-}
-
 function hashIt(facet: string, id: string) {
     const hasher = crypto.createHash("sha256");
     hasher.update(facet);
@@ -58,37 +38,56 @@ const empty = [] as undefined[];
 const hmrx = /^\0(.*)?x-hmr-([a-f0-9]+)$/;
 
 function hmr(facet = "main", refId = "", moduleId = ""): Plugin {
-    if (!refId || !moduleId) {
-        const fn = pathToFileURL(import.meta.url);
-        const vendor = vendorOf(fn.toString());
-        if (vendor === "@tsereact/rollup-dev-tools") {
-            if (!refId) {
-                refId = `${vendor}/webdock/hmr`;
-            }
-
-            if (!moduleId) {
-                moduleId = `${vendor}/webdock/hmr-context`;
-            }
-        }
-    }
-
-    if (!refId) {
-        refId = "@tsereact/webdock/hmr";
-    }
-
-    if (!moduleId) {
-        moduleId = "@tsereact/webdock/hmr";
-    }
-
     let gen = 0;
     const final = [] as HMR.Publish[];
     const states = new Map<string, [string, number]>();
     return {
         name: "hmr",
 
-        buildStart() {
+        async buildStart() {
             final.length = 0;
             gen = (new Date()).valueOf();
+
+            if (!refId || !moduleId) {
+                let last: any;
+                let url = new URL("./package.json", import.meta.url);
+                while (url.toString() !== last) {
+                    try {
+                        const fn = fileURLToPath(url);
+                        const json = await readFile(fn, "utf-8");
+                        last = true;
+
+                        const { hmr } = JSON.parse(json);
+                        if (typeof hmr === "object") {
+                            const { ref, module } = hmr;
+                            if (!refId && typeof ref === "string") {
+                                refId = ref;
+                            }
+
+                            if (!moduleId && typeof module === "string") {
+                                moduleId = module;
+                            }
+                        }
+                    } catch {
+                        // don't care
+                    }
+
+                    if (last === true) {
+                        break;
+                    }
+
+                    last = url.toString();
+                    url = new URL("../package.json", url);
+                }
+            }
+        
+            if (!refId) {
+                refId = "@tsereact/webdock/hmr-state";
+            }
+        
+            if (!moduleId) {
+                moduleId = "@tsereact/webdock/hmr-context";
+            }
         },
 
         async resolveId(id, importer, opts) {
@@ -96,7 +95,7 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin {
                 return id;
             }
 
-            if (id === refId) {
+            if (id === refId && importer && !isSource(importer)) {
                 const result = await this.resolve(moduleId, importer, { ...opts, skipSelf: true });
                 if (result && !result.external) {
                     const hash = hashIt(facet, importer || "");

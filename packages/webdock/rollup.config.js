@@ -19,7 +19,12 @@ export default defineConfig({
     external: x => externals.has(x),
 
     input: {
-        index: "src/index.ts",
+        "admin": "src/admin.ts",
+        "main": "src/main.ts",
+        "hmr-context": "src/hmr-context.ts",
+        "hmr-state": "src/hmr-state.ts",
+        "rollup-plugin-admin": "src/rollup-plugin-admin.ts",
+        "rollup-plugin-hmr": "src/rollup-plugin-hmr.ts",
     },
 
     output: [
@@ -34,7 +39,6 @@ export default defineConfig({
 
     plugins: [
         manualChunks("src/app", {
-            "page": "common",
             "main": "client",
         }),
 
