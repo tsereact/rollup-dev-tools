@@ -75,7 +75,7 @@ async function setup() {
 setup();
 
 namespace client {
-    export const on: Dispatch = (channel, handler) => {
+    export const on: Dispatch = (channel, handler: (args: any) => any) => {
         let list = map.get(channel);
         if (list === undefined) {
             list = [];

@@ -7,7 +7,7 @@ const ports = new Set<EventEmitter>();
 
 namespace server {
     export const on: Dispatch<[port: EventEmitter]> = (channel, handler) => {
-        emitter.on(channel, handler);
+        emitter.on(channel, handler as any);
     };
 
     export function dispatch(msg: Message) {
@@ -33,12 +33,13 @@ namespace server {
         ports.delete(port);
     }
 
-    export function observe(port: EventEmitter, channel: string) {
+    export function observe(port: EventEmitter, channel: Message["channel"], reset = false) {
         let filter = channels.get(port);
         if (filter === undefined) {
             channels.set(port, filter = new Set<string>());
         }
 
+        reset && filter.clear();
         filter.add(channel);
     }
 }
