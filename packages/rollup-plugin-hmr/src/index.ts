@@ -1,11 +1,9 @@
 import type { Plugin } from "rollup";
-import type { HMR } from "./ipc/Message";
 
 import { readFile } from "fs/promises";
 import { fileURLToPath } from "url";
 
 import crypto from "crypto";
-import client from "./ipc/client";
 
 function slashify(value: string) {
     return value.replace(/[\\/]+/g, "/");
@@ -37,15 +35,19 @@ function hashIt(facet: string, id: string) {
 const empty = [] as undefined[];
 const hmrx = /^\0(.*)?x-hmr-([a-f0-9]+)$/;
 
+interface HotInfo extends Record<string, [chunk: string, gen: number]> {
+
+}
+
 function hmr(facet = "main", refId = "", moduleId = ""): Plugin {
     let gen = 0;
-    const final = [] as HMR.Publish[];
+    let hot: HotInfo = {};
     const states = new Map<string, [string, number]>();
     return {
         name: "hmr",
 
         async buildStart() {
-            final.length = 0;
+            hot = {}; 
             gen = (new Date()).valueOf();
 
             if (!refId || !moduleId) {
@@ -175,14 +177,14 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin {
                             for (const id of info.dynamicallyImportedIds) {
                                 const [,, hash] = id.match(hmrx) || empty;
                                 if (hash) {
-                                    final.push({ channel: "hmr-publish", id: hash, chunk: key, gen });
+                                    hot[id] = [key, gen];
                                 }
                             }
 
                             for (const id of info.importedIds) {
                                 const [,, hash] = id.match(hmrx) || empty;
                                 if (hash) {
-                                    final.push({ channel: "hmr-publish", id: hash, chunk: key, gen });
+                                    hot[id] = [key, gen];
                                 }
                             }
                         }
@@ -192,7 +194,7 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin {
         },
 
         closeBundle() {
-            final.forEach(client.request);
+            // final.forEach(client.request);
         }
     };
 }

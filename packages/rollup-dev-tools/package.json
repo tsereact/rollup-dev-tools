@@ -1,6 +1,9 @@
 {
     "name": "@tsereact/rollup-dev-tools",
     "version": "1.0.0",
+    "bin": {
+        "webdock": "webdock.cjs"
+    },
     "peerDependencies": {
         "rollup": "^2.71.1"
     },
@@ -10,6 +13,24 @@
         },
         "./dist/plugin-check-imports/index.mjs": {
             "default": "./dist/plugin-check-imports/index.mjs"
+        },
+        "./dist/plugin-hmr/context.cjs": {
+            "default": "./dist/plugin-hmr/context.cjs"
+        },
+        "./dist/plugin-hmr/context.mjs": {
+            "default": "./dist/plugin-hmr/context.mjs"
+        },
+        "./dist/plugin-hmr/index.cjs": {
+            "default": "./dist/plugin-hmr/index.cjs"
+        },
+        "./dist/plugin-hmr/index.mjs": {
+            "default": "./dist/plugin-hmr/index.mjs"
+        },
+        "./dist/plugin-hmr/state.cjs": {
+            "default": "./dist/plugin-hmr/state.cjs"
+        },
+        "./dist/plugin-hmr/state.mjs": {
+            "default": "./dist/plugin-hmr/state.mjs"
         },
         "./dist/plugin-hook/index.cjs": {
             "default": "./dist/plugin-hook/index.cjs"
@@ -23,17 +44,41 @@
         "./dist/plugin-manual-chunks/index.mjs": {
             "default": "./dist/plugin-manual-chunks/index.mjs"
         },
-        "./dist/plugin-prebuild/linker.cjs": {
-            "default": "./dist/plugin-prebuild/linker.cjs"
+        "./dist/plugin-prebuild-linker/index.cjs": {
+            "default": "./dist/plugin-prebuild-linker/index.cjs"
         },
-        "./dist/plugin-prebuild/linker.mjs": {
-            "default": "./dist/plugin-prebuild/linker.mjs"
+        "./dist/plugin-prebuild-linker/index.mjs": {
+            "default": "./dist/plugin-prebuild-linker/index.mjs"
         },
-        "./dist/plugin-prebuild/primer.cjs": {
-            "default": "./dist/plugin-prebuild/primer.cjs"
+        "./dist/plugin-prebuild-linker/linker.cjs": {
+            "default": "./dist/plugin-prebuild-linker/linker.cjs"
         },
-        "./dist/plugin-prebuild/primer.mjs": {
-            "default": "./dist/plugin-prebuild/primer.mjs"
+        "./dist/plugin-prebuild-linker/linker.mjs": {
+            "default": "./dist/plugin-prebuild-linker/linker.mjs"
+        },
+        "./dist/plugin-prebuild-linker/primer.cjs": {
+            "default": "./dist/plugin-prebuild-linker/primer.cjs"
+        },
+        "./dist/plugin-prebuild-linker/primer.mjs": {
+            "default": "./dist/plugin-prebuild-linker/primer.mjs"
+        },
+        "./dist/plugin-prebuild-primer/index.cjs": {
+            "default": "./dist/plugin-prebuild-primer/index.cjs"
+        },
+        "./dist/plugin-prebuild-primer/index.mjs": {
+            "default": "./dist/plugin-prebuild-primer/index.mjs"
+        },
+        "./dist/plugin-prebuild-primer/linker.cjs": {
+            "default": "./dist/plugin-prebuild-primer/linker.cjs"
+        },
+        "./dist/plugin-prebuild-primer/linker.mjs": {
+            "default": "./dist/plugin-prebuild-primer/linker.mjs"
+        },
+        "./dist/plugin-prebuild-primer/primer.cjs": {
+            "default": "./dist/plugin-prebuild-primer/primer.cjs"
+        },
+        "./dist/plugin-prebuild-primer/primer.mjs": {
+            "default": "./dist/plugin-prebuild-primer/primer.mjs"
         },
         "./dist/plugin-run/index.cjs": {
             "default": "./dist/plugin-run/index.cjs"
@@ -52,6 +97,21 @@
             "require": "./dist/plugin-check-imports/index.cjs",
             "default": "./dist/plugin-check-imports/index.cjs"
         },
+        "./plugin-hmr/context": {
+            "import": "./dist/plugin-hmr/context.mjs",
+            "require": "./dist/plugin-hmr/context.cjs",
+            "default": "./dist/plugin-hmr/context.cjs"
+        },
+        "./plugin-hmr/index": {
+            "import": "./dist/plugin-hmr/index.mjs",
+            "require": "./dist/plugin-hmr/index.cjs",
+            "default": "./dist/plugin-hmr/index.cjs"
+        },
+        "./plugin-hmr/state": {
+            "import": "./dist/plugin-hmr/state.mjs",
+            "require": "./dist/plugin-hmr/state.cjs",
+            "default": "./dist/plugin-hmr/state.cjs"
+        },
         "./plugin-hook/index": {
             "import": "./dist/plugin-hook/index.mjs",
             "require": "./dist/plugin-hook/index.cjs",
@@ -62,15 +122,35 @@
             "require": "./dist/plugin-manual-chunks/index.cjs",
             "default": "./dist/plugin-manual-chunks/index.cjs"
         },
-        "./plugin-prebuild/linker": {
-            "import": "./dist/plugin-prebuild/linker.mjs",
-            "require": "./dist/plugin-prebuild/linker.cjs",
-            "default": "./dist/plugin-prebuild/linker.cjs"
+        "./plugin-prebuild-linker/index": {
+            "import": "./dist/plugin-prebuild-linker/index.mjs",
+            "require": "./dist/plugin-prebuild-linker/index.cjs",
+            "default": "./dist/plugin-prebuild-linker/index.cjs"
         },
-        "./plugin-prebuild/primer": {
-            "import": "./dist/plugin-prebuild/primer.mjs",
-            "require": "./dist/plugin-prebuild/primer.cjs",
-            "default": "./dist/plugin-prebuild/primer.cjs"
+        "./plugin-prebuild-linker/linker": {
+            "import": "./dist/plugin-prebuild-linker/linker.mjs",
+            "require": "./dist/plugin-prebuild-linker/linker.cjs",
+            "default": "./dist/plugin-prebuild-linker/linker.cjs"
+        },
+        "./plugin-prebuild-linker/primer": {
+            "import": "./dist/plugin-prebuild-linker/primer.mjs",
+            "require": "./dist/plugin-prebuild-linker/primer.cjs",
+            "default": "./dist/plugin-prebuild-linker/primer.cjs"
+        },
+        "./plugin-prebuild-primer/index": {
+            "import": "./dist/plugin-prebuild-primer/index.mjs",
+            "require": "./dist/plugin-prebuild-primer/index.cjs",
+            "default": "./dist/plugin-prebuild-primer/index.cjs"
+        },
+        "./plugin-prebuild-primer/linker": {
+            "import": "./dist/plugin-prebuild-primer/linker.mjs",
+            "require": "./dist/plugin-prebuild-primer/linker.cjs",
+            "default": "./dist/plugin-prebuild-primer/linker.cjs"
+        },
+        "./plugin-prebuild-primer/primer": {
+            "import": "./dist/plugin-prebuild-primer/primer.mjs",
+            "require": "./dist/plugin-prebuild-primer/primer.cjs",
+            "default": "./dist/plugin-prebuild-primer/primer.cjs"
         },
         "./plugin-run/index": {
             "import": "./dist/plugin-run/index.mjs",
@@ -87,6 +167,11 @@
             "require": "./dist/plugin-check-imports/index.cjs",
             "default": "./dist/plugin-check-imports/index.cjs"
         },
+        "./plugin-hmr": {
+            "import": "./dist/plugin-hmr/index.mjs",
+            "require": "./dist/plugin-hmr/index.cjs",
+            "default": "./dist/plugin-hmr/index.cjs"
+        },
         "./plugin-hook": {
             "import": "./dist/plugin-hook/index.mjs",
             "require": "./dist/plugin-hook/index.cjs",
@@ -96,6 +181,16 @@
             "import": "./dist/plugin-manual-chunks/index.mjs",
             "require": "./dist/plugin-manual-chunks/index.cjs",
             "default": "./dist/plugin-manual-chunks/index.cjs"
+        },
+        "./plugin-prebuild-linker": {
+            "import": "./dist/plugin-prebuild-linker/index.mjs",
+            "require": "./dist/plugin-prebuild-linker/index.cjs",
+            "default": "./dist/plugin-prebuild-linker/index.cjs"
+        },
+        "./plugin-prebuild-primer": {
+            "import": "./dist/plugin-prebuild-primer/index.mjs",
+            "require": "./dist/plugin-prebuild-primer/index.cjs",
+            "default": "./dist/plugin-prebuild-primer/index.cjs"
         },
         "./plugin-run": {
             "import": "./dist/plugin-run/index.mjs",

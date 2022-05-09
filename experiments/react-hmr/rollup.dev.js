@@ -6,7 +6,7 @@ import typescript from "@rollup/plugin-typescript";
 import url from "@rollup/plugin-url";
 
 import manualChunks from "@tsereact/rollup-dev-tools/plugin-manual-chunks";
-import linker from "@tsereact/rollup-dev-tools/plugin-prebuild/linker";
+import linker from "@tsereact/rollup-dev-tools/plugin-prebuild-linker";
 
 // manualChunks.suppressOutput();
 

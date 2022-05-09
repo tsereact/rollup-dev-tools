@@ -1,4 +1,4 @@
-import type { Plugin } from "rollup";
+import type { ModuleInfo, Plugin, ResolvedId } from "rollup";
 import fs from "fs/promises";
 import path, { relative } from "path";
 
@@ -26,6 +26,19 @@ function vendorOf(id: string) {
     }
 
     return false;
+}
+
+function vendorsVia(info: ModuleInfo) {
+    function filter(resos: readonly ResolvedId[]) {
+        return resos.filter(x => x.external === true).map(x => vendorOf(`/node_modules/${x.id}`));
+    }
+
+    return new Set([
+        ...info.dynamicallyImportedIds.map(vendorOf),
+        ...info.importedIds.map(vendorOf),
+        ...filter(info.dynamicallyImportedIdResolutions),
+        ...filter(info.importedIdResolutions),
+    ]);
 }
 
 function addKeys(deps: unknown, keys: Set<string>) {
@@ -67,10 +80,8 @@ function checkImports(): Plugin {
         },
 
         moduleParsed(info) {
-            const { id, dynamicallyImportedIds, importedIds } = info;
-            if (id[0] !== "\0" && !vendorOf(id)) {
-                for (const id of new Set([...dynamicallyImportedIds, ...importedIds])) {
-                    const vendor = vendorOf(id);
+            if (info.id[0] !== "\0" && !vendorOf(info.id)) {
+                for (const vendor of vendorsVia(info)) {
                     if (vendor && !vendors.has(vendor)) {
                         const importer = slashify(relative(process.cwd(), info.id));
                         this.warn(`${importer} uses ${vendor}: Fix code or add the package.`);

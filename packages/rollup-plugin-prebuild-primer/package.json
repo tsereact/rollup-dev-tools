@@ -1,8 +1,7 @@
 {
-    "name": "@tsereact/webdock",
+    "name": "@tsereact/rollup-plugin-prebuild-primer",
     "version": "1.0.0",
     "devDependencies": {
-        "@tsereact/rollup-plugin-manual-chunks": "workspace:packages/rollup-plugin-manual-chunks",
         "rollup": "^2.71.1"
     },
     "peerDependencies": {
@@ -12,11 +11,6 @@
         "build": "rollup -c rollup.config.js"
     },
     "exports": {
-        ".": {
-            "import": "./dist/index.mjs",
-            "require": "./dist/index.cjs",
-            "default": "./dist/index.cjs"
-        },
         "./*": {
             "import": "./dist/*.mjs",
             "require": "./dist/*.cjs",

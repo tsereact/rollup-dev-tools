@@ -9,8 +9,7 @@ export default defineConfig({
     external: x => !isAbsolute(x) && x[0] !== ".",
 
     input: {
-        linker: "src/linker.ts",
-        primer: "src/primer.ts",
+        index: "src/index.ts",
     },
 
     output: [
@@ -38,7 +37,7 @@ export default defineConfig({
             targets: [
                 {
                     src: "dist/*",
-                    dest: "../rollup-dev-tools/dist/plugin-prebuild"
+                    dest: "../rollup-dev-tools/dist/plugin-prebuild-linker"
                 }
             ]
         })

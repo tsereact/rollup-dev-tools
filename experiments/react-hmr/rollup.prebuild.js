@@ -7,7 +7,7 @@ import nodeResolve from "@rollup/plugin-node-resolve";
 import replace from "@rollup/plugin-replace";
 
 import manualChunks from "@tsereact/rollup-dev-tools/plugin-manual-chunks";
-import primer from "@tsereact/rollup-dev-tools/plugin-prebuild/primer";
+import primer from "@tsereact/rollup-dev-tools/plugin-prebuild-primer";
 
 const externals = new Set([
     ...builtinModules,
