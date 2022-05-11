@@ -44,41 +44,23 @@
         "./dist/plugin-manual-chunks/index.mjs": {
             "default": "./dist/plugin-manual-chunks/index.mjs"
         },
+        "./dist/plugin-node-externals/index.cjs": {
+            "default": "./dist/plugin-node-externals/index.cjs"
+        },
+        "./dist/plugin-node-externals/index.mjs": {
+            "default": "./dist/plugin-node-externals/index.mjs"
+        },
         "./dist/plugin-prebuild-linker/index.cjs": {
             "default": "./dist/plugin-prebuild-linker/index.cjs"
         },
         "./dist/plugin-prebuild-linker/index.mjs": {
             "default": "./dist/plugin-prebuild-linker/index.mjs"
         },
-        "./dist/plugin-prebuild-linker/linker.cjs": {
-            "default": "./dist/plugin-prebuild-linker/linker.cjs"
-        },
-        "./dist/plugin-prebuild-linker/linker.mjs": {
-            "default": "./dist/plugin-prebuild-linker/linker.mjs"
-        },
-        "./dist/plugin-prebuild-linker/primer.cjs": {
-            "default": "./dist/plugin-prebuild-linker/primer.cjs"
-        },
-        "./dist/plugin-prebuild-linker/primer.mjs": {
-            "default": "./dist/plugin-prebuild-linker/primer.mjs"
-        },
         "./dist/plugin-prebuild-primer/index.cjs": {
             "default": "./dist/plugin-prebuild-primer/index.cjs"
         },
         "./dist/plugin-prebuild-primer/index.mjs": {
             "default": "./dist/plugin-prebuild-primer/index.mjs"
-        },
-        "./dist/plugin-prebuild-primer/linker.cjs": {
-            "default": "./dist/plugin-prebuild-primer/linker.cjs"
-        },
-        "./dist/plugin-prebuild-primer/linker.mjs": {
-            "default": "./dist/plugin-prebuild-primer/linker.mjs"
-        },
-        "./dist/plugin-prebuild-primer/primer.cjs": {
-            "default": "./dist/plugin-prebuild-primer/primer.cjs"
-        },
-        "./dist/plugin-prebuild-primer/primer.mjs": {
-            "default": "./dist/plugin-prebuild-primer/primer.mjs"
         },
         "./dist/plugin-run/index.cjs": {
             "default": "./dist/plugin-run/index.cjs"
@@ -122,35 +104,20 @@
             "require": "./dist/plugin-manual-chunks/index.cjs",
             "default": "./dist/plugin-manual-chunks/index.cjs"
         },
+        "./plugin-node-externals/index": {
+            "import": "./dist/plugin-node-externals/index.mjs",
+            "require": "./dist/plugin-node-externals/index.cjs",
+            "default": "./dist/plugin-node-externals/index.cjs"
+        },
         "./plugin-prebuild-linker/index": {
             "import": "./dist/plugin-prebuild-linker/index.mjs",
             "require": "./dist/plugin-prebuild-linker/index.cjs",
             "default": "./dist/plugin-prebuild-linker/index.cjs"
         },
-        "./plugin-prebuild-linker/linker": {
-            "import": "./dist/plugin-prebuild-linker/linker.mjs",
-            "require": "./dist/plugin-prebuild-linker/linker.cjs",
-            "default": "./dist/plugin-prebuild-linker/linker.cjs"
-        },
-        "./plugin-prebuild-linker/primer": {
-            "import": "./dist/plugin-prebuild-linker/primer.mjs",
-            "require": "./dist/plugin-prebuild-linker/primer.cjs",
-            "default": "./dist/plugin-prebuild-linker/primer.cjs"
-        },
         "./plugin-prebuild-primer/index": {
             "import": "./dist/plugin-prebuild-primer/index.mjs",
             "require": "./dist/plugin-prebuild-primer/index.cjs",
             "default": "./dist/plugin-prebuild-primer/index.cjs"
-        },
-        "./plugin-prebuild-primer/linker": {
-            "import": "./dist/plugin-prebuild-primer/linker.mjs",
-            "require": "./dist/plugin-prebuild-primer/linker.cjs",
-            "default": "./dist/plugin-prebuild-primer/linker.cjs"
-        },
-        "./plugin-prebuild-primer/primer": {
-            "import": "./dist/plugin-prebuild-primer/primer.mjs",
-            "require": "./dist/plugin-prebuild-primer/primer.cjs",
-            "default": "./dist/plugin-prebuild-primer/primer.cjs"
         },
         "./plugin-run/index": {
             "import": "./dist/plugin-run/index.mjs",
@@ -181,6 +148,11 @@
             "import": "./dist/plugin-manual-chunks/index.mjs",
             "require": "./dist/plugin-manual-chunks/index.cjs",
             "default": "./dist/plugin-manual-chunks/index.cjs"
+        },
+        "./plugin-node-externals": {
+            "import": "./dist/plugin-node-externals/index.mjs",
+            "require": "./dist/plugin-node-externals/index.cjs",
+            "default": "./dist/plugin-node-externals/index.cjs"
         },
         "./plugin-prebuild-linker": {
             "import": "./dist/plugin-prebuild-linker/index.mjs",

@@ -8,6 +8,8 @@ import url from "@rollup/plugin-url";
 import manualChunks from "@tsereact/rollup-dev-tools/plugin-manual-chunks";
 import linker from "@tsereact/rollup-dev-tools/plugin-prebuild-linker";
 
+import hmr from "@tsereact/rollup-dev-tools/plugin-hmr";
+
 // manualChunks.suppressOutput();
 
 export default defineConfig({
@@ -26,6 +28,7 @@ export default defineConfig({
         manualChunks({ ".": "client" }),
         linker("dist", "yarn prebuild"),
 
+        hmr(),
         typescript(),
         nodeResolve(),
         

@@ -3,6 +3,8 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
+import hmr from "@tsereact/rollup-dev-tools/plugin-hmr/state";
+
 const styles = css`
     body {
         margin: 0;
@@ -27,5 +29,18 @@ const jsx =
     <App /> 
 </React.StrictMode>;
 
-const root = ReactDOM.createRoot(document.getElementById("root")!);
-root.render(jsx);
+function init() {
+    if (hmr) {
+        const newState = new Date().toISOString();
+        console.log("[HMR]: oldState = %s   newState = %s", hmr.state, newState);
+        hmr.state = newState;
+
+        hmr.onUpdate("import");
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById("root")!);
+    root.render(jsx);
+}
+
+hmr && hmr.ready && init();
+hmr || init();
