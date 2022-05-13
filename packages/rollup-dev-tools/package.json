@@ -8,72 +8,6 @@
         "rollup": "^2.71.1"
     },
     "exports": {
-        "./dist/plugin-check-imports/index.cjs": {
-            "default": "./dist/plugin-check-imports/index.cjs"
-        },
-        "./dist/plugin-check-imports/index.mjs": {
-            "default": "./dist/plugin-check-imports/index.mjs"
-        },
-        "./dist/plugin-hmr/context.cjs": {
-            "default": "./dist/plugin-hmr/context.cjs"
-        },
-        "./dist/plugin-hmr/context.mjs": {
-            "default": "./dist/plugin-hmr/context.mjs"
-        },
-        "./dist/plugin-hmr/index.cjs": {
-            "default": "./dist/plugin-hmr/index.cjs"
-        },
-        "./dist/plugin-hmr/index.mjs": {
-            "default": "./dist/plugin-hmr/index.mjs"
-        },
-        "./dist/plugin-hmr/state.cjs": {
-            "default": "./dist/plugin-hmr/state.cjs"
-        },
-        "./dist/plugin-hmr/state.mjs": {
-            "default": "./dist/plugin-hmr/state.mjs"
-        },
-        "./dist/plugin-hook/index.cjs": {
-            "default": "./dist/plugin-hook/index.cjs"
-        },
-        "./dist/plugin-hook/index.mjs": {
-            "default": "./dist/plugin-hook/index.mjs"
-        },
-        "./dist/plugin-manual-chunks/index.cjs": {
-            "default": "./dist/plugin-manual-chunks/index.cjs"
-        },
-        "./dist/plugin-manual-chunks/index.mjs": {
-            "default": "./dist/plugin-manual-chunks/index.mjs"
-        },
-        "./dist/plugin-node-externals/index.cjs": {
-            "default": "./dist/plugin-node-externals/index.cjs"
-        },
-        "./dist/plugin-node-externals/index.mjs": {
-            "default": "./dist/plugin-node-externals/index.mjs"
-        },
-        "./dist/plugin-prebuild-linker/index.cjs": {
-            "default": "./dist/plugin-prebuild-linker/index.cjs"
-        },
-        "./dist/plugin-prebuild-linker/index.mjs": {
-            "default": "./dist/plugin-prebuild-linker/index.mjs"
-        },
-        "./dist/plugin-prebuild-primer/index.cjs": {
-            "default": "./dist/plugin-prebuild-primer/index.cjs"
-        },
-        "./dist/plugin-prebuild-primer/index.mjs": {
-            "default": "./dist/plugin-prebuild-primer/index.mjs"
-        },
-        "./dist/plugin-run/index.cjs": {
-            "default": "./dist/plugin-run/index.cjs"
-        },
-        "./dist/plugin-run/index.mjs": {
-            "default": "./dist/plugin-run/index.mjs"
-        },
-        "./dist/plugin-sync-deps/index.cjs": {
-            "default": "./dist/plugin-sync-deps/index.cjs"
-        },
-        "./dist/plugin-sync-deps/index.mjs": {
-            "default": "./dist/plugin-sync-deps/index.mjs"
-        },
         "./plugin-check-imports/index": {
             "import": "./dist/plugin-check-imports/index.mjs",
             "require": "./dist/plugin-check-imports/index.cjs",
@@ -129,6 +63,16 @@
             "require": "./dist/plugin-sync-deps/index.cjs",
             "default": "./dist/plugin-sync-deps/index.cjs"
         },
+        "./plugin-web-server/index": {
+            "import": "./dist/plugin-web-server/index.mjs",
+            "require": "./dist/plugin-web-server/index.cjs",
+            "default": "./dist/plugin-web-server/index.cjs"
+        },
+        "./plugin-web-server/serve": {
+            "import": "./dist/plugin-web-server/serve.mjs",
+            "require": "./dist/plugin-web-server/serve.cjs",
+            "default": "./dist/plugin-web-server/serve.cjs"
+        },
         "./plugin-check-imports": {
             "import": "./dist/plugin-check-imports/index.mjs",
             "require": "./dist/plugin-check-imports/index.cjs",
@@ -173,6 +117,11 @@
             "import": "./dist/plugin-sync-deps/index.mjs",
             "require": "./dist/plugin-sync-deps/index.cjs",
             "default": "./dist/plugin-sync-deps/index.cjs"
+        },
+        "./plugin-web-server": {
+            "import": "./dist/plugin-web-server/index.mjs",
+            "require": "./dist/plugin-web-server/index.cjs",
+            "default": "./dist/plugin-web-server/index.cjs"
         }
     },
     "typesVersions": {

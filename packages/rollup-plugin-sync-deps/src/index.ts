@@ -29,7 +29,7 @@ async function readDirs(dirs: string[]) {
         }
     }
 
-    return result;
+    return result.sort();
 }
 
 export interface ExportMap extends Record<string, string | ExportMap> {
@@ -77,9 +77,13 @@ type Matchers = Matcher | Matcher[] | {
     exclude?: Matcher | Matcher[];
 };
 
+const xdots = /\..*\..*$/;
 const xjs = /\.[cm]js$/;
 const xindex = /\/index$/;
-const xmatchers:Matchers = [xjs];
+const xmatchers:Matchers = {
+    include: xjs,
+    exclude: x => xdots.test(path.basename(x)),
+};
 
 function check(fn: string, matchers = xmatchers): boolean {
     if (matchers instanceof RegExp) {
@@ -113,8 +117,6 @@ export async function generateExports(dirs: string[] = ["dist"], matchers = xmat
     const exports: ExportMap = {};
     for (const fn of await readDirs(dirs)) {
         if (check(fn, matchers)) {
-            exports["./" + fn] = generate(fn, [fn]);
-
             let prefix = fn.replace(xjs, "");
             const abs = path.resolve(prefix);
             for (const dir of dirs) {

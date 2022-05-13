@@ -9,8 +9,9 @@ import manualChunks from "@tsereact/rollup-dev-tools/plugin-manual-chunks";
 import linker from "@tsereact/rollup-dev-tools/plugin-prebuild-linker";
 
 import hmr from "@tsereact/rollup-dev-tools/plugin-hmr";
+import webServer from "@tsereact/rollup-dev-tools/plugin-web-server";
 
-// manualChunks.suppressOutput();
+manualChunks.suppressOutput();
 
 export default defineConfig({
     input: {
@@ -49,6 +50,8 @@ export default defineConfig({
                     dest: "dist"
                 }
             ]
-        })
+        }),
+
+        webServer(),
     ]
 });
