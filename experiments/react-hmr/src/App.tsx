@@ -52,8 +52,11 @@ function App() {
                 Edit <code>src/App.js</code> and save to reload.
             </p>
             <a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-                Learn React + HMR
+                Learn React
             </a>
+            <p>
+                Modify this in your favorite code editor.
+            </p>
         </header>
     </div>;
   

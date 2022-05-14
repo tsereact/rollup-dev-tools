@@ -9,7 +9,6 @@ let setupListen: Promise<string> | undefined;
 let block: Promise<void> | undefined;
 let unblock = () => {};
 
-const main = {};
 const configures = [] as Configure[];
 const locks = new Set<any>();
 
@@ -18,6 +17,8 @@ function wait() {
         block = new Promise<void>(resolve => {
             unblock = () => {
                 block = undefined;
+                unblock = () => {};
+
                 resolve();
             };
         });
@@ -71,22 +72,24 @@ function webServer(configure?: Configure): Plugin | false {
     webServer.listen();
     webServer.configure(configure);
 
-    let lock: any;
+    const lock = {};
+    locks.add(lock);
+
     return {
         name: "web-server",
 
         buildEnd() {
             dirs.length = 0;
-            locks.add(lock = {});
         },
 
         renderStart(opts) {
+            locks.add(lock);
             opts.dir && dirs.push(opts.dir);
         },
         
         async closeBundle() {
             locks.delete(lock);
-            locks.delete(main);
+            locks.delete(global);
 
             if (locks.size < 1) {
                 unblock();
@@ -108,7 +111,7 @@ namespace webServer {
             return false;
         }
 
-        locks.add(main);
+        locks.add(global);
         configures.push(fn);
 
         return true;

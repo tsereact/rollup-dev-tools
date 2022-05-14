@@ -121,15 +121,49 @@ async function viaSocket(signal: AbortSignal) {
     });
 }
 
+function head(signal: AbortSignal) {
+    const promise = fetch(location.href, {
+        method: "GET",
+        cache: "force-cache",
+        signal,
+    });
+
+    promise.then(x => x.arrayBuffer(), () => {});
+    return promise.then(x => x.headers, () => new Headers());
+}
+
+function isSafe(url: string | URL) {
+    url = new URL(url);
+
+    const site = new URL(location.href);
+    if (url.hostname !== site.hostname) {
+        return false;
+    }
+
+    if (url.hostname === "localhost") {
+        return true;
+    }
+
+    if (url.protocol !== site.protocol) {
+        return false;
+    }
+
+    return true;
+}
+
 async function viaWebSocket(signal: AbortSignal) {
-    const res = await fetch(location.href, { method: "HEAD", signal }).catch(() => undefined);
+    const headers = await head(signal);
     if (signal.aborted) {
         return false;
     }
 
     return new Promise<boolean>(resolve => {
-        const HMR_PORT = res?.headers.get("X-HMR-Port");
+        const HMR_PORT = headers.get("X-HMR-Port");
         const port = new URL(HMR_PORT || url, location.href);
+        if (!isSafe(port)) {
+            return signal.addEventListener("abort", () => resolve(false));
+        }
+
         const ws = new WebSocket(port);
         signal.addEventListener("abort", () => {
             resolve(false);

@@ -28,7 +28,7 @@ function doReload() {
     }
 
     if (typeof process === "object") {
-        process.exit();
+        process.exit(251);
     }
 }
 
