@@ -2,7 +2,7 @@
     "name": "@tsereact/rollup-plugin-manual-chunks",
     "version": "1.0.0",
     "devDependencies": {
-        "rollup": "^2.71.1"
+        "rollup": "^2.73.0"
     },
     "peerDependencies": {
         "rollup": "^2.71.1"
