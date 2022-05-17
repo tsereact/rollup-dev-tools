@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "devDependencies": {
         "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools",
-        "rollup": "^2.71.1"
+        "rollup": "^2.73.0"
     },
     "peerDependencies": {
         "rollup": "^2.71.1"
