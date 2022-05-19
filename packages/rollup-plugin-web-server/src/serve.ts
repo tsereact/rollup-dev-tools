@@ -56,11 +56,13 @@ namespace serve {
     }
 
     export function error(): ErrorHandleFunction {
-        return (err: Error, req, res, _next) => {
+        return (err: Error, req, res, next) => {
+            !next;
+
             req.resume();
-            res.statusCode = !_next || 500;
+            res.statusCode = 500;
             res.end();
-            
+
             console.error("Middleware error:", err.message);
         };
     }

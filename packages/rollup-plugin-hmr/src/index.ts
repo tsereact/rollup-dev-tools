@@ -5,9 +5,14 @@ import { fileURLToPath } from "url";
 
 import crypto from "crypto";
 import server from "./ipc/server";
+import path from "path";
 
 const empty = [] as undefined[];
 const hmrx = /^\0(.*)?x-hmr-([a-f0-9]+)$/;
+
+function relative(fn: string) {
+    return slashify(path.relative(process.cwd(), fn));
+}
 
 function slashify(value: string) {
     return value.replace(/[\\/]+/g, "/");
@@ -38,11 +43,21 @@ async function mtimeOf(id: string) {
     return "";
 }
 
-function hashIt(facet: string, id: string) {
+function hashIt(facet: string, value: string | string[]) {
     const hasher = crypto.createHash("sha256");
     hasher.update(facet);
-    hasher.update("\n");
-    hasher.update(id);
+
+    if (typeof value === "string") {
+        hasher.update("\n");
+        hasher.update(value);
+    }
+    
+    if (Array.isArray(value)) {
+        for (const part of value) {
+            hasher.update("\n");
+            hasher.update(part);
+        }
+    }
     
     return hasher.digest("hex");
 }
@@ -53,6 +68,7 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
     }
 
     let gen = 0;
+    let hash = "";
     let ticket = {};
     let port = "";
     let mtimes = {} as Record<string, string | Promise<string>>;
@@ -130,8 +146,8 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
             if (id === refId && importer && isSource(importer)) {
                 const result = await this.resolve(moduleId, importer, { ...opts, skipSelf: true });
                 if (result && !result.external) {
-                    const hash = hashIt(facet, importer || "");
-                    return `\0${result.id}?x-hmr-${hash}`;
+                    const id = hashIt(facet, relative(importer));
+                    return `\0${result.id}?x-hmr-${id}`;
                 }
 
                 return result;
@@ -143,17 +159,9 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
         load(id) {
             const [, ref, hash] = id.match(hmrx) || empty;
             if (ref && hash) {
-                const args = [
-                    JSON.stringify(hash),
-                    "import.meta.hmrVersion",
-                    "import.meta.hmrSelf",
-                    "import.meta.hmrPort",
-                ];
-
-                const argsStr = args.join(", ");
                 const code = [
                     `import { create } from ${JSON.stringify(ref)};\n`,
-                    `export default create(${argsStr});\n`,
+                    `export default create.apply(undefined, import.meta.hmr);\n`,
                 ];
 
                 return code.join("");
@@ -164,6 +172,7 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
 
         async buildEnd() {
             gen = (new Date()).valueOf();
+            hash = "";
             ticket = {};
             port = await server.listen();
             mtimes = {};
@@ -177,35 +186,38 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
             for (const id in mtimes) {
                 mtimes[id] = await mtimes[id];
             }
+
+            const result = [] as string[];
+            for (const id of Object.keys(mtimes).sort()) {
+                const mtime = mtimes[id];
+                if (mtime && typeof mtime === "string") {
+                    result.push(relative(id), mtime);
+                }
+            }
+
+            hash = hashIt(facet, result);
         },
 
         augmentChunkHash(chunk) {
-            const result = [] as any[];
+            const result = [] as string[];
             for (const id of Object.keys(chunk.modules).sort()) {
                 const mtime = mtimes[id];
                 if (mtime && typeof mtime === "string") {
-                    result.push(id, mtime);
+                    result.push(relative(id), mtime);
                 }
             }
 
             if (result.length) {
-                return JSON.stringify(result);    
+                return hashIt(facet, result);
             }
 
             return undefined;
         },
 
-        resolveImportMeta(prop, { chunkId }) {
-            if (prop === "hmrPort") {
-                return JSON.stringify(port);
-            }
-
-            if (prop === "hmrSelf") {
-                return JSON.stringify(chunkId);
-            }
-
-            if (prop === "hmrVersion") {
-                return JSON.stringify(gen);
+        resolveImportMeta(prop, { chunkId, moduleId }) {
+            const [,, id] = moduleId.match(hmrx) || empty;
+            if (prop === "hmr" && id) {
+                return JSON.stringify([id, gen, hash, chunkId, port]);
             }
 
             return undefined;
@@ -218,14 +230,14 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
                     for (const id in chunk.modules) {
                         const info = this.getModuleInfo(id);
                         if (info) {
-                            for (const id of info.dynamicallyImportedIds) {
-                                const [,, hash] = id.match(hmrx) || empty;
-                                hash && server.update(ticket, hash, key, gen);
+                            for (const moduleId of info.dynamicallyImportedIds) {
+                                const [,, id] = moduleId.match(hmrx) || empty;
+                                id && server.update(ticket, id, key, gen, hash);
                             }
 
-                            for (const id of info.importedIds) {
-                                const [,, hash] = id.match(hmrx) || empty;
-                                hash && server.update(ticket, hash, key, gen);
+                            for (const moduleId of info.importedIds) {
+                                const [,, id] = moduleId.match(hmrx) || empty;
+                                id && server.update(ticket, id, key, gen, hash);
                             }
                         }
                     }
@@ -242,10 +254,10 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
 namespace hmr {
     export function listen(port = 7180, host = "localhost") {
         if (process.env.ROLLUP_WATCH !== "true") {
-            return server.listen(port, host);
+            return Promise.resolve("");
         }
 
-        return Promise.resolve("");
+        return server.listen(port, host);
     }
 }
 

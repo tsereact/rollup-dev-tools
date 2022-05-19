@@ -38,15 +38,17 @@ export class ModuleState {
     readonly id: string;
     readonly ready: boolean;
     readonly ver: number;
+    readonly hash: string;
     readonly self: string;
     readonly port: string;
 
     state: any;
 
-    constructor(id: string, ready: boolean, ver: number, self: string, port: string, state?: any) {
+    constructor(id: string, ready: boolean, ver: number, hash: string, self: string, port: string, state?: any) {
         this.id = id;
         this.ready = ready;
         this.ver = ver;
+        this.hash = hash;
         this.self = self;
         this.port = port;
 
@@ -64,21 +66,21 @@ export class ModuleState {
 
         if (action === "import") {
             const entry = client.on(this, action, () => {
-                const [chunk, ver] = client.check(entry, this.id, this.ver);
+                const [chunk, ver] = client.check(entry, this.id, this.ver, this.hash);
                 chunk && doImport(this.self, chunk, ver!);
             });
         }
 
         if (action === "reload") {
             const entry = client.on(this, action, () => {
-                const [chunk] = client.check(entry, this.id, this.ver);
+                const [chunk] = client.check(entry, this.id, this.ver, this.hash);
                 chunk && doReload();
             });
         }
 
         if (typeof action === "function") {
             const entry = client.on(this, "", () => {
-                const [chunk, ver] = client.check(entry, this.id, this.ver);
+                const [chunk, ver] = client.check(entry, this.id, this.ver, this.hash);
                 chunk && action(chunk, ver!);
             });
         }
@@ -110,7 +112,7 @@ function hasSameHost(port: string) {
     return false;
 }
 
-export function create(id: string, ver: number, self: string, port: string) {
+export function create(id: string, ver: number, hash: string, self: string, port: string) {
     if (!hasSameHost(port)) {
         return undefined;
     }
@@ -119,19 +121,19 @@ export function create(id: string, ver: number, self: string, port: string) {
     const current = states.get(id);
     if (current !== undefined) {
         if (current.ver >= ver) {
-            return new ModuleState(id, false, ver, self, port);
+            return new ModuleState(id, false, ver, hash, self, port);
         }
 
         const { state } = current;
         current.freeze();
 
-        const next = new ModuleState(id, true, ver, self, port, state);
+        const next = new ModuleState(id, true, ver, hash, self, port, state);
         states.set(id, next);
 
         return next;
     }
 
-    const next = new ModuleState(id, true, ver, self, port);
+    const next = new ModuleState(id, true, ver, hash, self, port);
     states.set(id, next);
 
     return next;

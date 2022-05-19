@@ -99,7 +99,7 @@ function webServer(configure?: Configure): Plugin | false {
                 }
 
                 const port = await setupListen;
-                console.log("WebServer: %s", port);
+                console.log("[WebServer]: %s", port);
             }
         }
     };

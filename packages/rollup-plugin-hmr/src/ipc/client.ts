@@ -9,7 +9,7 @@ let url = "";
 const actions = new Set<Action>();
 const empty = [] as undefined[];
 const nop = Promise.resolve();
-const states = new Map<string, [chunk: string, gen: number]>();
+const states = new Map<string, [chunk: string, gen: number, hash: string]>();
 
 function update(data: string, socket?: Socket) {
     try {
@@ -23,11 +23,11 @@ function update(data: string, socket?: Socket) {
             for (const key in json) {
                 const value = json[key];
                 if (Array.isArray(value)) {
-                    const [chunk, ver] = value;
-                    if (typeof chunk === "string" && typeof ver === "number" && isFinite(ver)) {
+                    const [chunk, ver, hash] = value;
+                    if (typeof chunk === "string" && typeof ver === "number" && isFinite(ver) && typeof hash === "string") {
                         const current = states.get(key);
                         if (current === undefined || ver > current[1]) {
-                            states.set(key, [chunk, ver]);
+                            states.set(key, [chunk, ver, hash]);
                         }
                     }
                 }
@@ -123,12 +123,11 @@ async function viaSocket(signal: AbortSignal) {
 
 function head(signal: AbortSignal) {
     const promise = fetch(location.href, {
-        method: "GET",
+        method: "HEAD",
         cache: "force-cache",
         signal,
     });
-
-    promise.then(x => x.arrayBuffer(), () => {});
+    
     return promise.then(x => x.headers, () => new Headers());
 }
 
@@ -276,14 +275,14 @@ async function connect() {
 export type Entry = readonly [chunk?: string, ver?: number];
 
 namespace client {
-    export function check(action: Action, id: string, ver: number): Entry {
+    export function check(action: Action, id: string, ver: number, hash: string): Entry {
         if (!action[0]) {
             return Object.freeze(empty as any);
         }
 
         const entry = states.get(id) || empty;
-        const [chunk, gen] = entry;
-        if (chunk && gen && gen > ver) {
+        const [chunk, gen, state] = entry;
+        if (chunk && gen && gen > ver && hash !== state) {
             action[0] = undefined;
             actions.delete(action);
 

@@ -6,9 +6,9 @@ import { WebSocket, WebSocketServer} from "ws";
 
 let init: Promise<string> | undefined;
 let stateContent: string | undefined;
-let updates = [] as [ticket: any, id: string, chunk: string, gen: number][];
+let updates = [] as [ticket: any, id: string, chunk: string, gen: number, hash: string][];
 const sockets = new Set<Socket | WebSocket>();
-const state = new Map<string, [chunk: string, gen: number]>();
+const state = new Map<string, [chunk: string, gen: number, hash: string]>();
 const wss = new WebSocketServer({ noServer: true, perMessageDeflate: false });
 
 function render() {
