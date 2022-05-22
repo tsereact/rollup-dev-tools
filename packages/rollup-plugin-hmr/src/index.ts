@@ -68,10 +68,10 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
     }
 
     let gen = 0;
-    let hash = "";
     let ticket = {};
     let port = "";
-    let mtimes = {} as Record<string, string | Promise<string>>;
+    const hashes = new Map<string, string>();
+    const mtimes = new Map<string, string | Promise<string>>();
     return {
         name: "hmr",
 
@@ -172,52 +172,81 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
 
         async buildEnd() {
             gen = (new Date()).valueOf();
-            hash = "";
             ticket = {};
             port = await server.listen();
-            mtimes = {};
+            hashes.clear();
+            mtimes.clear();
 
             for (const id of this.getModuleIds()) {
                 if (isSource(id)) {
-                    mtimes[id] = mtimeOf(id);
+                    mtimes.set(id, mtimeOf(id));
                 }
             }
 
-            for (const id in mtimes) {
-                mtimes[id] = await mtimes[id];
+            for (const [id, mtime] of mtimes) {
+                mtimes.set(id, await mtime);
             }
 
-            const result = [] as string[];
-            for (const id of Object.keys(mtimes).sort()) {
-                const mtime = mtimes[id];
-                if (mtime && typeof mtime === "string") {
-                    result.push(relative(id), mtime);
+            for (const moduleId of this.getModuleIds()) {
+                const info = this.getModuleInfo(moduleId);
+                const [,, id] = moduleId.match(hmrx) || empty;
+                if (info && id) {
+                    const queue = new Set([
+                        ...info.importers,
+                        ...info.dynamicImporters,
+                    ]);
+
+                    for (const id of queue) {
+                        const info = this.getModuleInfo(id);
+                        if (info) {
+                            for (const id of info.importedIds) {
+                                queue.add(id);
+                            }
+
+                            for (const id of info.dynamicallyImportedIds) {
+                                queue.add(id);
+                            }
+                        }
+                    }
+
+                    const result = [] as string[];
+                    for (const id of [...queue].sort()) {
+                        const mtime = mtimes.get(id);
+                        if (typeof mtime === "string") {
+                            result.push(id, mtime);
+                        }
+                    }
+
+                    const hash = hashIt(facet, result);
+                    hashes.set(id, hash);
                 }
             }
-
-            hash = hashIt(facet, result);
         },
 
         augmentChunkHash(chunk) {
             const result = [] as string[];
-            for (const id of Object.keys(chunk.modules).sort()) {
-                const mtime = mtimes[id];
-                if (mtime && typeof mtime === "string") {
-                    result.push(relative(id), mtime);
+            for (const moduleId of Object.keys(chunk.modules).sort()) {
+                const [,, id] = moduleId.match(hmrx) || empty;
+                if (id) {
+                    const hash = hashes.get(id) || "";
+                    result.push(id, hash);
                 }
             }
 
             if (result.length) {
-                return hashIt(facet, result);
+                return result.join(",");
             }
 
             return undefined;
         },
 
         resolveImportMeta(prop, { chunkId, moduleId }) {
-            const [,, id] = moduleId.match(hmrx) || empty;
-            if (prop === "hmr" && id) {
-                return JSON.stringify([id, gen, hash, chunkId, port]);
+            if (prop === "hmr") {
+                const [,, id] = moduleId.match(hmrx) || empty;
+                if (id) {
+                    const hash = hashes.get(id) || "";
+                    return JSON.stringify([id, gen, hash, chunkId, port]);    
+                }
             }
 
             return undefined;
@@ -232,12 +261,18 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
                         if (info) {
                             for (const moduleId of info.dynamicallyImportedIds) {
                                 const [,, id] = moduleId.match(hmrx) || empty;
-                                id && server.update(ticket, id, key, gen, hash);
+                                if (id) {
+                                    const hash = hashes.get(id) || "";
+                                    server.update(ticket, id, key, gen, hash);
+                                }
                             }
 
                             for (const moduleId of info.importedIds) {
                                 const [,, id] = moduleId.match(hmrx) || empty;
-                                id && server.update(ticket, id, key, gen, hash);
+                                if (id) {
+                                    const hash = hashes.get(id) || "";
+                                    server.update(ticket, id, key, gen, hash);
+                                }
                             }
                         }
                     }
