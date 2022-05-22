@@ -19,7 +19,9 @@
         "strictNullChecks": true,
         "module": "ESNext",
         "moduleResolution": "Node",
-        "outDir": "dist"
+        "outDir": "dist",
+        "declaration": true,
+        "declarationDir": "dist"
     },
     "include": [
         "src"
