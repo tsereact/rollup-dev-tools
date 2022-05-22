@@ -55,12 +55,24 @@ async function handleRequest(req: IncomingMessage, res: ServerResponse) {
     (await setupConnect)(req, res);
 }
 
+function shouldRun() {
+    if (process.env.ROLLUP_WATCH === "true") {
+        return true;
+    }
+
+    if (process.env.WEB_SERVER === "true") {
+        return true;
+    }
+
+    return false;
+}
+
 interface Configure {
     (connect: Server): Promise<void> | void;
 }
 
 function webServer(configure?: Configure): Plugin | false {
-    if (process.env.ROLLUP_WATCH !== "true") {
+    if (!shouldRun()) {
         return false;
     }
 
@@ -107,7 +119,7 @@ function webServer(configure?: Configure): Plugin | false {
 
 namespace webServer {
     export function configure(fn: (connect: Server) => any) {
-        if (process.env.ROLLUP_WATCH !== "true") {
+        if (!shouldRun()) {
             return false;
         }
 
@@ -118,7 +130,7 @@ namespace webServer {
     }
 
     export async function listen(port = 8780, host = "localhost") {
-        if (process.env.ROLLUP_WATCH !== "true") {
+        if (!shouldRun()) {
             return "";
         }
 
