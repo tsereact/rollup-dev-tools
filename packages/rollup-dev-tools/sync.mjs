@@ -1,2 +1,2 @@
-import { rewritePackageJson } from "./dist/plugin-sync-deps/index.mjs";
+import { rewritePackageJson } from "./dist/plugin-sync-exports/index.mjs";
 rewritePackageJson();

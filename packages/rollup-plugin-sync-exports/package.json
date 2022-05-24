@@ -1,5 +1,5 @@
 {
-    "name": "@tsereact/rollup-plugin-sync-deps",
+    "name": "@tsereact/rollup-plugin-sync-exports",
     "version": "1.0.0",
     "devDependencies": {
         "rollup": "^2.73.0"

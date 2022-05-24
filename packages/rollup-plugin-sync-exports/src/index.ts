@@ -164,7 +164,7 @@ interface Options {
     generate?: typeof generateExport;
 }
 
-function syncDeps(options?: Options): Plugin {
+function syncExports(options?: Options): Plugin {
     const { dirs, matchers, generate } = options || {};
     return {
         name: "sync-deps",
@@ -175,4 +175,4 @@ function syncDeps(options?: Options): Plugin {
     };
 }
 
-export default syncDeps;
+export default syncExports;

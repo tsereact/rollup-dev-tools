@@ -5,14 +5,8 @@
         "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools",
         "rollup": "^2.73.0"
     },
-    "peerDependencies": {
-        "rollup": "^2.71.1"
-    },
     "scripts": {
         "dev": "rollup -c rollup.dev.js",
         "prebuild": "rollup -c rollup.prebuild.js"
-    },
-    "dependencies": {
-        "@emotion/react": "^11.9.0"
     }
 }
