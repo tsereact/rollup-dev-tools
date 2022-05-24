@@ -10,7 +10,7 @@
 
 ## Build Instructions
 ```
-NOTE: Requires the NEWEST Node 16.x
+BIG RED NOTE: Requires the NEWEST Node 16.x
 yarn 
 yarn build:packages
 cd experiments/react-hmr
