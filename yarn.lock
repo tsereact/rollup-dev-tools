@@ -195,14 +195,67 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@experiments/react-hmr@workspace:experiments/react-hmr"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
     "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
 "@experiments/sandbox@workspace:experiments/sandbox":
   version: 0.0.0-use.local
   resolution: "@experiments/sandbox@workspace:experiments/sandbox"
+  dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
+    rollup: ^2.73.0
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -385,10 +438,36 @@ __metadata:
 "@tsereact/rollup-dev-tools@workspace:packages/rollup-dev-tools":
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-dev-tools@workspace:packages/rollup-dev-tools"
-  peerDependencies:
-    rollup: ^2.71.1
+  dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
+    rollup: ^2.73.0
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   bin:
-    webdock: webdock.cjs
+    sync-deps: sync-deps.cjs
   languageName: unknown
   linkType: soft
 
@@ -396,9 +475,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-check-imports@workspace:packages/rollup-plugin-check-imports"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -406,10 +509,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-hmr@workspace:packages/rollup-plugin-hmr"
   dependencies:
-    "@tsereact/rollup-plugin-manual-chunks": "workspace:packages/rollup-plugin-manual-chunks"
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -417,9 +543,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-hook@workspace:packages/rollup-plugin-hook"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -427,9 +577,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-manual-chunks@workspace:packages/rollup-plugin-manual-chunks"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -437,9 +611,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-node-externals@workspace:packages/rollup-plugin-node-externals"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -447,9 +645,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-prebuild-linker@workspace:packages/rollup-plugin-prebuild-linker"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -457,9 +679,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-prebuild-primer@workspace:packages/rollup-plugin-prebuild-primer"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -467,9 +713,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-run@workspace:packages/rollup-plugin-run"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -477,9 +747,33 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-sync-exports@workspace:packages/rollup-plugin-sync-exports"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -487,9 +781,67 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@tsereact/rollup-plugin-web-server@workspace:packages/rollup-plugin-web-server"
   dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
     rollup: ^2.73.0
-  peerDependencies:
-    rollup: ^2.71.1
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
+  languageName: unknown
+  linkType: soft
+
+"@tsereact/tool-sync-dev-deps@workspace:packages/tool-sync-dev-deps":
+  version: 0.0.0-use.local
+  resolution: "@tsereact/tool-sync-dev-deps@workspace:packages/tool-sync-dev-deps"
+  dependencies:
+    "@emotion/react": ^11.9.0
+    "@rollup/plugin-commonjs": ^22.0.0
+    "@rollup/plugin-html": ^0.2.4
+    "@rollup/plugin-json": ^4.1.0
+    "@rollup/plugin-node-resolve": ^13.2.1
+    "@rollup/plugin-replace": ^4.0.0
+    "@rollup/plugin-typescript": ^8.3.2
+    "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
+    "@types/compression": ^1.7.2
+    "@types/connect": ^3.4.35
+    "@types/node": ^17.0.30
+    "@types/react": ^18.0.8
+    "@types/react-dom": ^18.0.3
+    "@types/serve-static": ^1.13.10
+    "@types/ws": ^8.5.3
+    compression: ^1.7.4
+    connect: ^3.7.0
+    react: ^18.1.0
+    react-dom: ^18.1.0
+    rollup: ^2.73.0
+    rollup-plugin-copy: ^3.4.0
+    rollup-plugin-terser: ^7.0.2
+    serve-static: ^1.15.0
+    tslib: ^2.4.0
+    typescript: ^4.6.4
+    ws: ^8.6.0
   languageName: unknown
   linkType: soft
 
@@ -2268,6 +2620,7 @@ __metadata:
     "@rollup/plugin-replace": ^4.0.0
     "@rollup/plugin-typescript": ^8.3.2
     "@rollup/plugin-url": ^7.0.0
+    "@tsereact/rollup-dev-tools": "workspace:packages/rollup-dev-tools"
     "@types/compression": ^1.7.2
     "@types/connect": ^3.4.35
     "@types/node": ^17.0.30

@@ -6,12 +6,13 @@
   - No magic HMR-spooky dev server.
   - No magic in-memory dev server.
 - Keep the dev build similar to the prod build "as much as possible".
+- Demonstrate how to setup a mono repo with yarn pnp.
 
 ## Build Instructions
 ```
-NOTE: Requires Node 16.x
+NOTE: Requires the NEWEST Node 16.x
 yarn 
-yarn build:plugins
+yarn build:packages
 cd experiments/react-hmr
 yarn dev --watch
 ```

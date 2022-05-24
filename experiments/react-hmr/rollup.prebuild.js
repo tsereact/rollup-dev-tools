@@ -41,8 +41,6 @@ export default defineConfig({
         replace({
             preventAssignment: true,
             values: {
-                "__dirname": "(process.cwd())",
-                "eval": "(0 || eval)",
                 "process.env.NODE_ENV": JSON.stringify("production"),
             }
         }),
