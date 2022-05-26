@@ -35,9 +35,11 @@ export default defineConfig({
         primer("dist"),
         manualChunks({ "npm:": "vendor" }),
 
+        // part of @emotion still relies on a CJS import.
+        // this will only convert pure-cjs code and it leaves esm code alone.
         commonjs({ sourceMap: false }),
         nodeResolve(),
-        
+
         replace({
             preventAssignment: true,
             values: {
