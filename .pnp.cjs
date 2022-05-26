@@ -21,6 +21,10 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         "reference": "workspace:."\
       },\
       {\
+        "name": "@experiments/node-hmr",\
+        "reference": "workspace:experiments/node-hmr"\
+      },\
+      {\
         "name": "@experiments/react-hmr",\
         "reference": "workspace:experiments/react-hmr"\
       },\
@@ -80,6 +84,7 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
     "enableTopLevelFallback": true,\
     "ignorePatternData": "(^(?:\\\\.yarn\\\\/sdks(?:\\\\/(?!\\\\.{1,2}(?:\\\\/|$))(?:(?:(?!(?:^|\\\\/)\\\\.{1,2}(?:\\\\/|$)).)*?)|$))$)",\
     "fallbackExclusionList": [\
+      ["@experiments/node-hmr", ["workspace:experiments/node-hmr"]],\
       ["@experiments/react-hmr", ["workspace:experiments/react-hmr"]],\
       ["@experiments/sandbox", ["workspace:experiments/sandbox"]],\
       ["@tsereact/rollup-dev-tools", ["workspace:packages/rollup-dev-tools"]],\
@@ -375,6 +380,42 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@emotion/weak-memoize", "npm:0.2.5"]\
           ],\
           "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@experiments/node-hmr", [\
+        ["workspace:experiments/node-hmr", {\
+          "packageLocation": "./experiments/node-hmr/",\
+          "packageDependencies": [\
+            ["@experiments/node-hmr", "workspace:experiments/node-hmr"],\
+            ["@emotion/react", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:11.9.0"],\
+            ["@rollup/plugin-commonjs", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:22.0.0"],\
+            ["@rollup/plugin-html", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:0.2.4"],\
+            ["@rollup/plugin-json", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:4.1.0"],\
+            ["@rollup/plugin-node-resolve", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:13.2.1"],\
+            ["@rollup/plugin-replace", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:4.0.0"],\
+            ["@rollup/plugin-typescript", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:8.3.2"],\
+            ["@rollup/plugin-url", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:7.0.0"],\
+            ["@tsereact/rollup-dev-tools", "workspace:packages/rollup-dev-tools"],\
+            ["@types/compression", "npm:1.7.2"],\
+            ["@types/connect", "npm:3.4.35"],\
+            ["@types/node", "npm:17.0.30"],\
+            ["@types/react", "npm:18.0.8"],\
+            ["@types/react-dom", "npm:18.0.3"],\
+            ["@types/serve-static", "npm:1.13.10"],\
+            ["@types/ws", "npm:8.5.3"],\
+            ["compression", "npm:1.7.4"],\
+            ["connect", "npm:3.7.0"],\
+            ["react", "npm:18.1.0"],\
+            ["react-dom", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:18.1.0"],\
+            ["rollup", "npm:2.73.0"],\
+            ["rollup-plugin-copy", "npm:3.4.0"],\
+            ["rollup-plugin-terser", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:7.0.2"],\
+            ["serve-static", "npm:1.15.0"],\
+            ["tslib", "npm:2.4.0"],\
+            ["typescript", "patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=bda367"],\
+            ["ws", "virtual:34b5a4aae1d04df9aa41b120b81865f4a0a77efc5ddcb7fc9365fd3759ae05209c56572a5d79525f9b75ee455c3a0bbff910d62eadb45de18a875c64845d68b7#npm:8.6.0"]\
+          ],\
+          "linkType": "SOFT"\
         }]\
       ]],\
       ["@experiments/react-hmr", [\

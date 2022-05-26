@@ -163,7 +163,7 @@ namespace webServer {
                 console.warn("[WebServer]: Could not listen on %s:%s [ERROR: %s]", host, port, err.message);
                 server.removeAllListeners("error");
 
-                server.listen(port, host !== "*" ? host : undefined);
+                server.listen(0, host !== "*" ? host : undefined);
             });
 
             server.listen(port, host !== "*" ? host : undefined);

@@ -102,11 +102,20 @@ export class ModuleState {
 
 function hasSameHost(port: string) {
     try {
-        const url = new URL(location.href);
-        const src = new URL(port);
-        return url.hostname === src.hostname;
+        if (typeof location === "object") {
+            const url = new URL(location.href);
+            const src = new URL(port);
+            return url.hostname === src.hostname;    
+        }
     } catch {
         /// don't care
+    }
+
+    if (typeof process === "object" && process) {
+        const { versions } = process;
+        if (typeof versions === "object" && versions && versions.node) {
+            return true;
+        }
     }
 
     return false;

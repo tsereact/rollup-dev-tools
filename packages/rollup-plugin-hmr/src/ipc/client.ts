@@ -104,6 +104,8 @@ async function viaSocket(signal: AbortSignal) {
         });
 
         req.on("upgrade", (_, socket, head) => {
+            req.removeAllListeners("close");
+
             signal.addEventListener("abort", () => {
                 socket.removeAllListeners();
                 socket.destroy();
@@ -253,6 +255,7 @@ async function connect() {
         
         if (isNode()) {
             error = await viaSocket(signal);
+            console.log("--- error", error);
         }
 
         if (error && actions.size) {

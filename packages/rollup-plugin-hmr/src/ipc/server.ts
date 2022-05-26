@@ -117,7 +117,7 @@ function handleSocketX(socket: Socket | WebSocket) {
         }
     };
 
-    timer = setInterval(ping, 5000);
+    timer = setInterval(ping, 25000);
 
     if (socket instanceof Socket) {
         read(socket, data => {
@@ -231,7 +231,7 @@ namespace server {
                 console.warn("[HMR]: Could not listen on %s:%s [ERROR: %s]", host, port, err.message);
                 server.removeAllListeners("error");
 
-                server.listen(port, host !== "*" ? host : undefined);
+                server.listen(0, host !== "*" ? host : undefined);
             });
 
             server.listen(port, host !== "*" ? host : undefined);

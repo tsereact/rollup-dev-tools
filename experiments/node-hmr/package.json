@@ -1,6 +1,9 @@
 {
-    "name": "@experiments/sandbox",
+    "name": "@experiments/node-hmr",
     "version": "1.0.0",
+    "scripts": {
+        "build": "rollup -c rollup.build.js"
+    },
     "devDependencies": {
         "@emotion/react": "^11.9.0",
         "@rollup/plugin-commonjs": "^22.0.0",

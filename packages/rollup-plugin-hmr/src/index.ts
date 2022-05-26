@@ -8,7 +8,7 @@ import server from "./ipc/server";
 import path from "path";
 
 const empty = [] as undefined[];
-const hmrx = /^\0(.*)?x-hmr-([a-f0-9]+)$/;
+const hmrx = /^\0(.*)?\?x-hmr-([a-f0-9]+)$/;
 
 function relative(fn: string) {
     return slashify(path.relative(process.cwd(), fn));
@@ -225,16 +225,16 @@ function hmr(facet = "main", refId = "", moduleId = ""): Plugin | false {
 
         augmentChunkHash(chunk) {
             const result = [] as string[];
-            for (const moduleId of Object.keys(chunk.modules).sort()) {
-                const [,, id] = moduleId.match(hmrx) || empty;
-                if (id) {
-                    const hash = hashes.get(id) || "";
-                    result.push(id, hash);
+            for (const id of Object.keys(chunk.modules).sort()) {
+                const mtime = mtimes.get(id);
+                if (typeof mtime === "string") {
+                    // We'll only get here if we are "source"
+                    result.push(relative(id), mtime);
                 }
             }
 
             if (result.length) {
-                return result.join(",");
+                return result.join("\n");
             }
 
             return undefined;
