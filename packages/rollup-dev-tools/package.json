@@ -30,6 +30,11 @@
             "require": "./dist/plugin-hook/index.cjs",
             "default": "./dist/plugin-hook/index.cjs"
         },
+        "./plugin-interop/index": {
+            "import": "./dist/plugin-interop/index.mjs",
+            "require": "./dist/plugin-interop/index.cjs",
+            "default": "./dist/plugin-interop/index.cjs"
+        },
         "./plugin-manual-chunks/index": {
             "import": "./dist/plugin-manual-chunks/index.mjs",
             "require": "./dist/plugin-manual-chunks/index.cjs",
@@ -89,6 +94,11 @@
             "import": "./dist/plugin-hook/index.mjs",
             "require": "./dist/plugin-hook/index.cjs",
             "default": "./dist/plugin-hook/index.cjs"
+        },
+        "./plugin-interop": {
+            "import": "./dist/plugin-interop/index.mjs",
+            "require": "./dist/plugin-interop/index.cjs",
+            "default": "./dist/plugin-interop/index.cjs"
         },
         "./plugin-manual-chunks": {
             "import": "./dist/plugin-manual-chunks/index.mjs",

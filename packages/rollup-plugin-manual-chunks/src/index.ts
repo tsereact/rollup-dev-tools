@@ -88,7 +88,7 @@ function resolve(id: string) {
         return `npm:${vendor}`;
     }
 
-    id = path.normalize(path.resolve(id) + "/");
+    id = path.normalize(path.resolve(id));
 
     if (id.startsWith(cwd)) {
         id = id.substring(cwd.length);
@@ -130,11 +130,12 @@ function match(id: string | false, dir: string | false) {
     if (dir.startsWith("src:") && id.startsWith(dir)) {
         id = id.substring(dir.length);
 
-        if (id[0] === "/") {
+        const [first] = id.split("/");
+        if (first === "") {
             return true;
         }
 
-        const [head, type, tail ] = id.split(".");
+        const [head, type, tail] = id.split(".");
         return head === "" && type && tail === undefined;
     }
 

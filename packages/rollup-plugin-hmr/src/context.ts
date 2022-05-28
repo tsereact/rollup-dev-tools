@@ -1,7 +1,23 @@
 import client from "./ipc/client";
 
+function findGlobal(): any {
+    if (typeof window === "object") {
+        return window;
+    }
+
+    if (typeof self === "object") {
+        return self;
+    }
+
+    if (typeof global === "object") {
+        return global;
+    }
+
+    throw new Error("Cannot find global object.");
+}
+
 function createGlobalStates(): Map<string, ModuleState> {
-    const global = (new Function("return this"))();
+    const global = findGlobal();
     const sym = Symbol.for("https://github.com/tsereact/rollup-dev-tools#hmr");
     const map = global[sym];
     if (map !== undefined) {
@@ -103,9 +119,19 @@ export class ModuleState {
 function hasSameHost(port: string) {
     try {
         if (typeof location === "object") {
-            const url = new URL(location.href);
             const src = new URL(port);
-            return url.hostname === src.hostname;    
+            const url = new URL(location.href);
+            if (url.protocol === "file:") {
+                return true;
+            }
+
+            if (url.hostname === "localhost") {
+                return true;
+            }
+
+            if (url.protocol === src.protocol && url.hostname === src.hostname) {
+                return true;
+            }
         }
     } catch {
         /// don't care

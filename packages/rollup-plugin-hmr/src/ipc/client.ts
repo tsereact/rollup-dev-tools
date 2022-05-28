@@ -133,23 +133,23 @@ function head(signal: AbortSignal) {
     return promise.then(x => x.headers, () => new Headers());
 }
 
-function isSafe(url: string | URL) {
-    url = new URL(url);
+function isSafe(src: string | URL) {
+    src = new URL(src);
 
-    const site = new URL(location.href);
-    if (url.hostname !== site.hostname) {
-        return false;
+    const url = new URL(location.href);
+    if (url.protocol === "file:") {
+        return true;
     }
 
     if (url.hostname === "localhost") {
         return true;
     }
 
-    if (url.protocol !== site.protocol) {
-        return false;
+    if (url.protocol === src.protocol && url.hostname === src.hostname) {
+        return true;
     }
 
-    return true;
+    return false;
 }
 
 async function viaWebSocket(signal: AbortSignal) {
