@@ -2,7 +2,7 @@ import { readFile } from "fs/promises";
 import { Plugin } from "rollup";
 import { makeModuleId, pathToName } from "../core/ref";
 
-import { descend } from "../rollup-tools/walk";
+import { walk } from "../rollup-tools/walk";
 import { isAbsolute } from "path";
 
 import GlobSet, { GlobInit } from "../core/GlobSet";
@@ -106,7 +106,19 @@ export function emitHtml(templateFile: string, render = renderDefault): Plugin {
                     }
 
                     const result = new Set<string>();
-                    descend(ctx, seeds, id => result.add(map.get(id) || ""));
+                    walk(ctx, seeds, (id, info, list) => {
+                        if (!list) {
+                            return [
+                                ...info.dynamicallyImportedIds,
+                                ...info.importedIds,
+                            ];
+                        }
+                        
+                        const fn = map.get(id);
+                        fn && result.add(fn);
+
+                        return undefined;
+                    });
 
                     return [...result].filter(x => !!x);
                 },

@@ -1,7 +1,7 @@
 import type { Plugin } from "rollup";
 
 import { commit, start } from "../core/ipcMain";
-import { descend } from "../rollup-tools/walk";
+import { walk } from "../rollup-tools/walk";
 import { isAbsolute, relative, resolve } from "path";
 import { hashIt, slashify, tag } from "../core/ref";
 import { stat } from "fs/promises";
@@ -112,7 +112,16 @@ function hmr(): Plugin | false {
                 mtimes.set(id, await promise);
             }
 
-            descend(this, this.getModuleIds(), (id, info) => {
+            walk(this, this.getModuleIds(), (id, info, list) => {
+                if (!list) {
+                    const result = [
+                        ...info.dynamicallyImportedIds,
+                        ...info.importedIds,
+                    ];
+
+                    return result.sort();
+                }
+
                 const result: string[] = [];
                 const mtime = mtimes.get(id);
                 if (mtime) {
@@ -121,12 +130,7 @@ function hmr(): Plugin | false {
                     result.push(ref, mtime, "/");
                 }
 
-                const list = [
-                    ...info.dynamicallyImportedIds,
-                    ...info.importedIds,
-                ];
-
-                for (const id of list.sort()) {
+                for (const id of list) {
                     const hash = hashes.get(id);
                     hash && result.push(hash);
                 }
@@ -135,6 +139,8 @@ function hmr(): Plugin | false {
                     const hash = hashIt(...result);
                     hashes.set(id, hash);
                 }
+
+                return undefined;
             });
         },
 

@@ -1,7 +1,7 @@
 import picomatch from "picomatch";
 import { slashify } from "./ref";
 
-export type GlobInit = string | GlobMatcher | GlobSet | GlobInit[];
+export type GlobInit = string | GlobMatcher | GlobSet | (string | GlobMatcher | GlobSet)[];
 
 export interface GlobMatcher {
     (value: string): boolean | [isMatch: boolean, isNegation: boolean];
@@ -17,38 +17,26 @@ class GlobSet extends Map<[pattern: string, prefix: string], GlobMatcher> {
         input.length && this.add(...input);
     }
 
-    add(...inputs: GlobInit[]): this;
-    add(input?: GlobInit, ...inputs: GlobInit[]) {
-        if (inputs.length) {
-            input = input !== undefined ? [input, ...inputs] : inputs;
-        }
+    add(...inputs: GlobInit[]) {
+        for (const input of inputs.flat()) {
+            if (input instanceof GlobSet) {
+                for (const [[pattern, prefix], matcher] of input) {
+                    this.set([pattern, prefix], matcher);
+                }
 
-        if (input instanceof GlobSet) {
-            for (const [[pattern, prefix], matcher] of input) {
-                this.set([pattern, prefix], matcher);
+                return this;
             }
 
-            return this;
-        }
-
-        if (typeof input === "function") {
-            this.set([input.name, ""], input);
-            return this;
-        }
-
-        if (typeof input === "string") {
-            const [matcher, prefix] = GlobSet.compile(input);
-            this.set([input, prefix], matcher);
-            return this;
-        }
-
-        if (Array.isArray(input)) {
-            while (input.some(x => Array.isArray(x))) {
-                input = input.flat();
+            if (typeof input === "function") {
+                this.set([input.name, ""], input);
+                return this;
             }
 
-            input.forEach(x => this.add(x));
-            return this;
+            if (typeof input === "string") {
+                const [matcher, prefix] = GlobSet.compile(input);
+                this.set([input, prefix], matcher);
+                return this;
+            }
         }
 
         return this;

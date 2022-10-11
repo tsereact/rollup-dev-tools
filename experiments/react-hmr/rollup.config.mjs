@@ -60,7 +60,8 @@ export default defineConfig({
         }),
 
         chunkOptimizer({
-            src: "src/**"
+            npm: "npm:*/**",
+            lib: "ws:*/**",
         }),
 
         chunkLogger(),

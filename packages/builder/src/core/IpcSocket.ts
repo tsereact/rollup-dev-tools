@@ -21,7 +21,7 @@ function isNode() {
 }
 
 async function createDecoder() {
-    const { Readable } = await import("stream");
+    const { Readable } = await import("./IpcSocketRefs");
     return new Readable({
         encoding: "utf-8",
         read() {},
@@ -32,8 +32,7 @@ async function request(port: string, protocol?: string) {
     const url = new URL(port);
     url.protocol = url.protocol.replace("ws", "http");
 
-    const http = await import("http");
-    const https = await import("https");
+    const { http, https } = await import("./IpcSocketRefs");
     const { request } = url.protocol === "https" ? https : http;
     const decoder = await createDecoder();
     const req = request(url, {

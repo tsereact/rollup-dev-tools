@@ -1,21 +1,23 @@
 import { defineConfig } from "rollup";
 
+import commonjs from "@rollup/plugin-commonjs";
 import copy from "rollup-plugin-copy";
 import nodeResolve from "@rollup/plugin-node-resolve";
+import replace from "@rollup/plugin-replace";
 import typescript from "@rollup/plugin-typescript";
 import url from "@rollup/plugin-url";
 
-import manualChunks from "@tsereact/rollup-dev-tools/plugin-manual-chunks";
-import linker from "@tsereact/rollup-dev-tools/plugin-prebuild-linker";
-
-import hmr from "@tsereact/rollup-dev-tools/plugin-hmr";
-import webServer from "@tsereact/rollup-dev-tools/plugin-web-server";
-
-manualChunks.suppressOutput();
+import chunkLogger from "@tsereact/builder/rollup-plugin-chunk-logger";
+import chunkOptimizer from "@tsereact/builder/rollup-plugin-chunk-optimizer";
+import hmr from "@tsereact/builder/rollup-plugin-hmr";
+import resolver from "@tsereact/builder/rollup-plugin-resolver";
 
 export default defineConfig({
+    context: "{}",
+
     input: {
         index: "src/index.tsx",
+        main: "src/main.ts",
     },
 
     output: {
@@ -26,13 +28,18 @@ export default defineConfig({
     },
 
     plugins: [
-        manualChunks({ ".": "client" }),
-        linker("dist", "yarn prebuild"),
+        resolver(x => {
+            if (x.isNative()) {
+                return x.hoist();
+            }
+        }),
 
         hmr(),
+
         typescript(),
         nodeResolve(),
-        
+        commonjs(),
+
         url({
             limit: 0,
             destDir: "dist",
@@ -52,6 +59,18 @@ export default defineConfig({
             ]
         }),
 
-        webServer(),
+        replace({
+            preventAssignment: true,
+            values: {
+                "process.env.NODE_ENV": JSON.stringify("production"),
+            }
+        }),
+
+        chunkOptimizer({
+            npm: "npm:*/**",
+            lib: "ws:*/**",
+        }),
+
+        chunkLogger(),
     ]
 });

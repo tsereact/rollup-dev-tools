@@ -16,11 +16,11 @@ function resolver(callback: Callback): Plugin {
 
         async resolveId(id, importer, opts) {
             if (id.startsWith("\0link?")) {
-                return id;
+                return { id, syntheticNamedExports: "__exports" };
             }
 
             if (id.startsWith("\0hoist?")) {
-                return id;
+                return { id, syntheticNamedExports: "__exports" };
             }
 
             const preflight = await callback(new ResolutionHelper(id, importer));
@@ -43,11 +43,10 @@ function resolver(callback: Callback): Plugin {
 
             if (id.startsWith("\0hoist?")) {
                 const tail = id.replace(jsonx, "");
-                const [target, state] = JSON.parse(tail) as string[];
-                const input = JSON.stringify(state) || "undefined";
+                const [target] = JSON.parse(tail) as string[];
                 const code = [
-                    `import __import from ${JSON.stringify(target)};`,
-                    `export const __exports = await __import(${input});`,
+                    `export const __exports = Object.create(require(${JSON.stringify(target)}));`,
+                    `Object.assign(__exports, { default: __exports, __esModule: !0 });`,
                 ];
 
                 return code.join("\n");

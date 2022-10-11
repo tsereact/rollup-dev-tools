@@ -2,8 +2,6 @@
     "name": "@experiments/react-hmr",
     "version": "1.0.0",
     "scripts": {
-        "dev": "rollup -c rollup.dev.js",
-        "prebuild": "rollup -c rollup.prebuild.js",
         "watch": "rollup -c rollup.config.mjs --watch"
     },
     "devDependencies": {

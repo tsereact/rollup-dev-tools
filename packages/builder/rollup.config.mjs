@@ -25,6 +25,7 @@ export default defineConfig({
         
         "rollup-plugin-chunk-logger": "src/rollup-plugin-chunk-logger/index.ts",
         "rollup-plugin-chunk-optimizer": "src/rollup-plugin-chunk-optimizer/index.ts",
+        "rollup-plugin-resolver": "src/rollup-plugin-resolver/index.ts",
         "rollup-plugin-web-server": "src/rollup-plugin-web-server/index.ts",
     },
 

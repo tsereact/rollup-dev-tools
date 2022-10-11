@@ -1,41 +1,109 @@
 import { GetManualChunkApi, OutputPlugin } from "rollup";
-import { kernel } from "../rollup-tools/walk";
+import { pathToName } from "../core/ref";
+import { walk } from "../rollup-tools/walk";
 
-import ChunkLayout from "../rollup-tools/ChunkLayout";
-import ChunkMapper, { Filter } from "../rollup-tools/ChunkMapper";
+import GlobSet, { GlobInit } from "../core/GlobSet";
 
-export interface ChunkOptimizerCallback {
-    (kernel: ChunkMapper, chunks: ChunkLayout, api: GetManualChunkApi): any;
+export interface ModuleMatcher {
+    (id: string, api: GetManualChunkApi): boolean;
 }
 
-export interface ChunkOptimizerGroups {
-    [key: string]: Filter | Filter[];
+export type Filter = string | ModuleMatcher | (string | ModuleMatcher)[];
+
+export interface ChunkOptimizerOptions {
+    [key: string]: Filter | {
+        hint: Filter;
+        edge: Filter;
+    };
 }
 
-function chunkOptimizer(spec: ChunkOptimizerCallback | ChunkOptimizerGroups): OutputPlugin {
+function never() {
+    return false;
+}
+
+function isEntry(api: GetManualChunkApi) {
+    return (id: string) => {
+        const info = api.getModuleInfo(id);
+        return !!info && info.isEntry;
+    }
+}
+
+function convertMatch(api: GetManualChunkApi, input: Filter) {
+    if (Array.isArray(input)) {
+        const fixed = input.map((part): GlobInit => {
+            if (typeof part === "function") {
+                return id => part(id, api);
+            }
+
+            const [matcher] = GlobSet.compile(part);
+            return id => matcher(pathToName(id));
+        });
+        
+        const filter = new GlobSet(...fixed);
+        return (id: string) => filter.match(id);
+    }
+
+    if (typeof input === "function") {
+        return (id: string) => input(id, api);
+    }
+
+    const filter = new GlobSet(input);
+    return (id: string) => filter.match(pathToName(id));
+}
+
+function convertEntry(api: GetManualChunkApi, informal: ChunkOptimizerOptions[string]) {
+    let edge: (id: string) => boolean = never;
+    let hint: (id: string) => boolean = never;
+    if (Array.isArray(informal) || typeof informal !== "object") {
+        edge = convertMatch(api, informal);
+        hint = isEntry(api);
+
+        return { edge, hint };
+    }
+
+    edge = convertMatch(api, informal.edge);
+    hint = convertMatch(api, informal.hint);
+
+    return { edge, hint };
+}
+
+function chunkOptimizer(options: ChunkOptimizerOptions): OutputPlugin {
     return {
         name: "chunk-optimizer",
 
         outputOptions(opts) {
             const { manualChunks } = opts;
             if (typeof manualChunks === "function" || manualChunks === undefined) {
-                let chunks: ChunkLayout | undefined;
+                let hints: Map<string, string> | undefined;
                 opts.manualChunks = (id, api) => {
-                    if (chunks === undefined) {
-                        chunks = new ChunkLayout(api);
+                    if (!hints) {
+                        hints = new Map<string, string>();
 
-                        const graph = new ChunkMapper(api, chunks, kernel(api));
-                        if (typeof spec === "function") {
-                            spec(graph, chunks, api);
-                        } else {
-                            for (const [name, entry] of Object.entries(spec)) {
-                                graph.generate(name, ...[entry].flat());
-                            }
+                        const result = hints;
+                        for (const [name, entry] of Object.entries(options)) {
+                            const { hint, edge } = convertEntry(api, entry);
+                            const seeds = [...api.getModuleIds()].filter(hint);
+                            walk(api, seeds, (id, info) => {
+                                if (hint(id)) {
+                                    return info.importedIds;
+                                }
+
+                                if (info.dynamicImporters.length) {
+                                    return undefined;
+                                }
+
+                                if (!edge(id)) {
+                                    return info.importedIds;
+                                }
+
+                                result.set(id, name);
+                                return undefined;
+                            });
                         }
                     }
 
                     const result = manualChunks?.(id, api);
-                    return result !== undefined ? result : chunks.get(id);
+                    return result !== undefined ? result : hints.get(id);
                 };
             }
 

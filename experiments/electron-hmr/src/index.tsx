@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 import fs from "fs/promises";
-import hmr from "@tsereact/rollup-dev-tools/builder/rollup-plugin-hmr/state";
+import hmr from "@tsereact/builder/rollup-plugin-hmr/state";
 
 const styles = css`
     body {
@@ -41,6 +41,7 @@ function init() {
         hmr.state = newState;
 
         hmr.onUpdate("import");
+        hmr.showLogs();
     }
 
     const root = ReactDOM.createRoot(document.getElementById("root")!);

@@ -117,13 +117,8 @@ class ResolutionHelper {
         return { id, external };
     }
 
-    hoist(id?: string, state?: any): ResolveIdResult {
-        if (id === undefined) {
-            id = "hoist";
-            state = this.id;
-        }
-
-        const tail = JSON.stringify([id, state]);
+    hoist(): ResolveIdResult {
+        const tail = JSON.stringify([this.id, this.importer]);
         return { id: "\0hoist?" + tail, syntheticNamedExports: "__exports" };
     }
 
