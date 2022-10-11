@@ -108,7 +108,7 @@ export function route(method: Method, root = "/", filter?: RegExp): WebHandler {
             return skip(next);
         }
 
-        const tail = path.substring(path.length)
+        const tail = path.substring(root.length)
         if (filter) {
             const match = tail.match(filter);
             if (!match) {
@@ -116,9 +116,11 @@ export function route(method: Method, root = "/", filter?: RegExp): WebHandler {
             }
 
             urlOrigin(req);
+
+            const old = req.url;
             req.url = toUrl(url, tail);
 
-            return after(next, () => req.url = urlOrigin(req));
+            return after(next, () => req.url = old);
         }
 
         if (tail) {
@@ -191,7 +193,7 @@ export const events = new EventEmitter() as GlobalEvents;
 
 export function addSlash(): WebHandler {
     return (req, res, next) => {
-        const tail = toPath(urlOrigin(req)).replace(prefixx, "")
+        const tail = toPath(urlOrigin(req)).replace(prefixx, "");
         if (req.url === "/" && tail) {
             req.resume();
             res.statusCode = 302;
@@ -282,13 +284,9 @@ export function files(paths: string | string[] | [webPath: string, appPath: stri
     result.use(compress());
 
     paths.forEach(entry => {
-        if (typeof entry === "string") {
-            entry = ["/", entry];
-        }
-
         const [webPath, appPath] = entry;
         const host = connect();
-        host.use(route("*", webPath, /(?:|\/.*)$/));
+        host.use(route("GET HEAD", webPath, /(?:|\/.*)$/));
         host.use(addSlash());
         host.use(xhash(), staticFiles(appPath, setHeaders));
         host.use(dynamicFiles(appPath, setHeaders));

@@ -5,14 +5,15 @@ import { descend } from "../rollup-tools/walk";
 import { isAbsolute, relative, resolve } from "path";
 import { hashIt, slashify, tag } from "../core/ref";
 import { stat } from "fs/promises";
+import { isWatchMode } from "../core/modes";
 
 const empty: undefined[] = [];
 const jsonx = /^.*?\?/;
 const npmx = /[\\/]node_modules[\\/]/;
-const prefix = "__hmr$$";
+const prefix = "\0x-hmr?";
 
 const moduleId = "@tsereact/builder/rollup-plugin-hmr/context";
-const refId = "@tsereact/builder/rollup-plugin-hmr/hmr";
+const refId = "@tsereact/builder/rollup-plugin-hmr/state";
 
 function isSource(id?: string): id is string {
     if (id === undefined) {
@@ -50,24 +51,16 @@ function isContext(id: string) {
     return empty as [undefined, undefined];
 }
 
-function shouldRun() {
-    if (process.env.ROLLUP_WATCH === "true") {
-        return true;
-    }
-
-    return false;
-}
-
 function hmr(): Plugin | false {
-    if (!shouldRun()) {
+    if (!isWatchMode()) {
         return false;
     }
 
     let states: any[] = [];
-    let ver = (new Date()).valueOf();
+    const base = resolve();
+    const project = process.env.npm_package_name;
     const ticket: any = {};
     const hashes = new Map<string, string>();
-    const base = resolve(process.env.ROLLUP_HMR_BASE || ".");
     return {
         name: "hmr",
 
@@ -91,10 +84,10 @@ function hmr(): Plugin | false {
         load(id) {
             const [ref, target] = isContext(id);
             if (ref && target) {
-                const hash = tag(base, ref);
+                const id = tag(base, ref);
                 const code = [
                     `import { create } from ${JSON.stringify(target)};\n`,
-                    `export default create.apply(undefined, ${prefix}${hash});\n`,
+                    `export default create.apply(undefined, __hmr$$${id});\n`,
                 ];
 
                 return code.join("");
@@ -129,8 +122,8 @@ function hmr(): Plugin | false {
                 }
 
                 const list = [
-                    ...info.dynamicImporters,
-                    ...info.importers,
+                    ...info.dynamicallyImportedIds,
+                    ...info.importedIds,
                 ];
 
                 for (const id of list.sort()) {
@@ -159,10 +152,9 @@ function hmr(): Plugin | false {
             return undefined;
         },
 
-        async generateBundle(opts, bundle) {
-            const dir = relative(base, resolve(opts.dir || "."));
-            const root = isAbsolute(dir) ? dir : slashify(dir);
+        async generateBundle(_, bundle) {
             const port = await start();
+            const ver = (new Date()).valueOf();
             for (const key in bundle) {
                 const chunk = bundle[key];
                 if (chunk.type === "chunk") {
@@ -180,33 +172,33 @@ function hmr(): Plugin | false {
                                 if (ref && target) {
                                     const id = tag(base, ref);
                                     const hash = hashes.get(ref) || "";
-                                    const info = [id, ver, hash, root, key, port];
-                                    lines.push(`const ${prefix}${id} = ${JSON.stringify(info)};`);
+                                    const info = [id, ver, hash, project, key, port];
+                                    lines.push(`const __hmr$$${id} = ${JSON.stringify(info)};`);
 
                                     info.pop();
                                     states.push(info);
                                 }
                             }
                         }
-
-                        if (lines.length) {
-                            const { map } = chunk;
-                            if (map) {
-                                // Adjust source maps because we are injecting code.
-                                const prefix = ";".repeat(lines.length);
-                                map.mappings = `${prefix}${map.mappings}`;
-                            }
-                    
-                            lines.push(chunk.code);
-                            chunk.code = lines.join("\n");
-                        }
                     }
+
+                    if (lines.length) {
+                        const { map } = chunk;
+                        if (map) {
+                            // Adjust source maps because we are injecting code.
+                            const prefix = ";".repeat(lines.length);
+                            map.mappings = `${prefix}${map.mappings}`;
+                        }
+
+                        lines.push(chunk.code);
+                        chunk.code = lines.join("\n");
+                    }                    
                 }
             }
         },
 
         closeBundle() {
-            commit(ticket, { hmr: states });
+            commit(ticket, { hmr: states, project });
         },
     };
 }

@@ -10,10 +10,10 @@ export class IpcStateHub {
 
     private broadcast(id: any, state: any) {
         const { handlers, states } = this;
-        handlers.forEach(async (ticket, handler) => {
+        handlers.forEach(async (handler, ticket) => {
             await (0 as any);
             if (handlers.get(ticket) === handler && states.get(id) === state) {
-                handler(id, state);
+                handler(id, state || false);
             }
         });
     }
@@ -35,14 +35,12 @@ export class IpcStateHub {
 
         handlers.set(ticket, handler);
 
-        for (const [id, state] of states) {
-            states.forEach(async () => {
-                await (0 as any);
-                if (handlers.get(ticket) === handler && states.get(id) === state) {
-                    handler(id, state);
-                }
-            });
-        }
+        states.forEach(async (state, id) => {
+            await (0 as any);
+            if (handlers.get(ticket) === handler && states.get(id) === state) {
+                handler(id, state);
+            }
+        });
 
         return true;
     }
@@ -61,10 +59,25 @@ export class IpcStateHub {
         }
 
         if (states.delete(id)) {
-            this.broadcast(id, false);
+            this.broadcast(id, undefined);
         }
 
         return false;
+    }
+
+    clear(filter: (id: any, state: any) => boolean) {
+        const set = new Set<any>();
+        const { states } = this;
+        for (const [id, state] of states) {
+            if (filter(id, state)) {
+                set.add(id);
+            }
+        }
+
+        for (const id of set) {
+            states.delete(id);
+            this.broadcast(id, false);
+        }
     }
 
     async sync(ipc: IpcSocket, filter?: (state: any) => any) {
@@ -77,7 +90,7 @@ export class IpcStateHub {
                 if (state) {
                     handles.set(key, id || (id = [sym]));
                     this.set(id, state);
-                } else if (keys.delete(key)) {
+                } else if (handles.delete(key)) {
                     this.set(id, false);
                 }
             }
@@ -104,9 +117,7 @@ export class IpcStateHub {
         await ipc.wait();
 
         this.off(sym);
-        for (const id of keys.values()) {
-            this.set(id, false);
-        }
+        this.clear(id => Array.isArray(id) && id[0] === sym);
     }
 
     toJSON() {

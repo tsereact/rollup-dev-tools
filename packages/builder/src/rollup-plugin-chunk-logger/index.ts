@@ -3,11 +3,11 @@ import { OutputPlugin } from "rollup";
 import { basename, dirname, isAbsolute } from "path";
 import { pathToName } from "../core/ref";
 
-const empty: [string, string] = ["virtual", ""];
+const empty: [string, string] = ["hidden", ""];
 
 function nameOf(id: string): [string, string] {
     const name = pathToName(id);
-    if (name === "\0") {
+    if (name[0] === "\0") {
         return empty;
     }
 
@@ -18,15 +18,20 @@ function nameOf(id: string): [string, string] {
         dir = dir.substring(4);
     }
 
-    if (isAbsolute(name)) {
+    if (dir.startsWith("ws:")) {
         prefix = "workspace ";
+        dir = dir.substring(3);
     }
 
-    return [prefix + dirname(name), basename(name)];
+    if (isAbsolute(name)) {
+        prefix = "system ";
+    }
+
+    return [prefix + dir, basename(name)];
 }
 
 function emitGroup(dir: string, group: string[]) {
-    console.info("  %s: ", dir, group.join(" "));
+    console.info("  %s", dir, group.length);
 }
 
 function chunkLogger(): OutputPlugin {
@@ -48,9 +53,10 @@ function chunkLogger(): OutputPlugin {
                         if (dir !== key) {
                             dir && emitGroup(dir, group);
                             dir = key;
+                            group.length = 0;
                         }
 
-                        name && group.push(name);
+                        group.push(name || id);
                     }
 
                     dir && emitGroup(dir, group);

@@ -9,7 +9,7 @@ function hook(io: Writable) {
         for (const screen of screens) {
             screen.push(data);
         }
-    
+
         return (write as Function).call(this, data, ...args);
     };
 }
@@ -25,27 +25,6 @@ class ScreenCapture extends Readable {
         });
 
         screens.add(this);
-    }
-
-    capture() {
-        this.pause();
-
-        let data: string;
-        const list: string[] = [];
-        while (data = this.read()) {
-            list.push(data);
-        }
-    
-        let value = list.join("");
-        value = value.replace(/.*\x1b(c|\[2J)/us, "");
-        value = value.replace(/\x1b\[.*?[D]/gs, "");
-
-        return value;
-    }
-
-    drain() {
-        this.pause();
-        while (this.read());
     }
 
     _destroy(error: Error | null, callback: (error?: Error | null | undefined) => void): void {

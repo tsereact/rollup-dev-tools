@@ -1,36 +1,40 @@
 import { createHash } from "crypto";
-import { isAbsolute, normalize, relative, resolve } from "path";
+import { isAbsolute, relative, resolve } from "path";
 
-const rx = /[\\/]+/g;
-
-export function cwd() {
-    return slashify(normalize(process.cwd() + "/"));
-}
+const relx = /^\.\.?[\\/]/;
+const slashx = /[\\/]+/g;
 
 export function pathToName(path: string) {
     if (path[0] === "\0") {
         return path;
     }
     
-    path = slashify(path);
-
+    const safe = slashify(path);
     const prefix = "/node_modules/";
-    const index = path.indexOf(prefix);
+    const index = safe.indexOf(prefix);
     if (index >= 0) {
-        const tail = path.substring(index + prefix.length);
+        const tail = safe.substring(index + prefix.length);
         return "npm:" + tail;
     }
 
-    const base = cwd();
-    if (path.startsWith(base)) {
-        return path.substring(base.length);
+    const result = relativeStrict(process.cwd(), path);
+    if (result) {
+        return result;
+    }
+
+    const { PROJECT_CWD } = process.env;
+    if (PROJECT_CWD) {
+        const result = relativeStrict(PROJECT_CWD, path);
+        if (result) {
+            return "ws:" + result;
+        }    
     }
 
     return path;
 }
 
 export function hashIt(...args: any[]) {
-    args = args.map(x => JSON.stringify(x) || "undefined")
+    args = args.map(x => typeof x === "bigint" ? String(x) : (JSON.stringify(x) || "undefined"));
 
     const hasher = createHash("sha256");
     hasher.update(args.join("\n"));
@@ -64,6 +68,20 @@ export function makeModuleId(dir: string, target: string) {
     return "./" + target;
 }
 
+export function relativeStrict(from: string, to: string) {
+    to = relative(from, to);
+
+    if (isAbsolute(to)) {
+        return "";
+    }
+
+    if (relx.test(to)) {
+        return "";
+    }
+
+    return slashify(to);
+}
+
 export function slashify(value: string) {
-    return value.replace(rx, "/");
+    return value.replace(slashx, "/");
 }

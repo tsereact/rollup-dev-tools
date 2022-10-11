@@ -1,8 +1,10 @@
+import { resolve } from "path";
 
-async function test() {
-    await 0;
-    console.log("--- 2");
-}
+import { getPluginConfiguration } from "@yarnpkg/cli";
+import { Configuration, Project, Manifest, Workspace } from "@yarnpkg/core";
+import { npath } from "@yarnpkg/fslib";
 
-test();
-console.log("--- 1");
+process.chdir("../..");
+const cfg = await Configuration.find(npath.cwd(), getPluginConfiguration());
+const { project } = await Project.find(cfg, npath.cwd());
+//console.log(pkg);

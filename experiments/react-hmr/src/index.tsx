@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 
-import hmr from "@tsereact/rollup-dev-tools/plugin-hmr/state";
+import hmr from "@tsereact/builder/rollup-plugin-hmr/state";
 
 const styles = css`
     body {
@@ -36,6 +36,7 @@ function init() {
         hmr.state = newState;
 
         hmr.onUpdate("import");
+        hmr.showLogs();
     }
 
     const root = ReactDOM.createRoot(document.getElementById("root")!);

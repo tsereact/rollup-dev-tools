@@ -26,7 +26,7 @@ function chunkOptimizer(spec: ChunkOptimizerCallback | ChunkOptimizerGroups): Ou
 
                         const graph = new ChunkMapper(api, chunks, kernel(api));
                         if (typeof spec === "function") {
-                            spec(graph, chunks, api);    
+                            spec(graph, chunks, api);
                         } else {
                             for (const [name, entry] of Object.entries(spec)) {
                                 graph.generate(name, ...[entry].flat());

@@ -1,6 +1,27 @@
-<pre>D  console.log<span style="font-weight:normal;text-decoration:none;font-style:normal">
-    Hello from <b><i><span style="color:#A00">xterm.js</span></i></b></span> $
-<span style="font-weight:normal;text-decoration:none;font-style:normal">
-      at Object.log (<span style="font-weight:normal;text-decoration:none;font-style:normal">src/tools/__tests__/ScreenCapture.test.ts:7:17)<span style="font-weight:normal;text-decoration:none;font-style:normal"><span style="font-weight:normal;text-decoration:none;font-style:normal">
+<!DOCTYPE html>
+<html>
+    <head>
+        
+    </head>
+    <style>
+        
+    </style>
+    <body>
+        <div class="root">test</div>
+        <script>
+            setTimeout(async function () {
+                const { IpcConsole } = await import("./dist/esm/core/IpcConsole.mjs");
+                const cons = IpcConsole.create("xterm-console-output", "___test");
 
-</pree></span></span></span></span>
+                for (let i = 0; i < 120; i++) {
+                    const first = document.body.firstElementChild;
+                    const dt = new Date();
+                    cons.write(`${dt}\n`);
+                    cons.write("https://www.youtube.com/watch?v=UOxkGD8qRB4&list=RDUOxkGD8qRB4&start_radio=1&ab_channel=LeagueofLegends\n");
+                }
+
+                cons.show();
+            }, 100);
+        </script>
+    </body>
+</html>

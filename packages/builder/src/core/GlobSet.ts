@@ -8,8 +8,12 @@ export interface GlobMatcher {
 }
 
 class GlobSet extends Map<[pattern: string, prefix: string], GlobMatcher> {
+    input?: string;
+    pattern?: string;
+
     constructor(...input: GlobInit[]) {
-        super();        
+        super();
+        this.match = this.match.bind(this);
         input.length && this.add(...input);
     }
 
@@ -49,9 +53,6 @@ class GlobSet extends Map<[pattern: string, prefix: string], GlobMatcher> {
 
         return this;
     }
-
-    input?: string;
-    pattern?: string;
 
     match(value: string) {
         this.input = value = slashify(value);

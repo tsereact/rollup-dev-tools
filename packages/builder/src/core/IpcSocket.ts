@@ -30,7 +30,11 @@ async function createDecoder() {
 
 async function request(port: string, protocol?: string) {
     const url = new URL(port);
-    const { request } = url.protocol.endsWith("s") ? await import("https") : await import("http");
+    url.protocol = url.protocol.replace("ws", "http");
+
+    const http = await import("http");
+    const https = await import("https");
+    const { request } = url.protocol === "https" ? https : http;
     const decoder = await createDecoder();
     const req = request(url, {
         headers: { connection: "upgrade", upgrade: protocol || "ipc" }
@@ -79,7 +83,6 @@ export abstract class IpcSocket {
     protocols?: string;
     error?: Error | null;
 
-    abstract ping(body: any): boolean;
     abstract send(type: MessageType, body: any): boolean;
     abstract close(error?: Error | null): boolean;
 
@@ -136,9 +139,16 @@ export abstract class IpcSocket {
             return false;
         }
 
-        this.handlers.forEach(async handler => {
+        if (type === "ping") {
+            this.send("pong", body);
+        }
+
+        const { handlers } = this;
+        handlers.forEach(async (handler, ticket) => {
             await (0 as any);
-            Object.isFrozen(this) || handler(type, body);
+            if (handlers.get(ticket) === handler) {
+                handler(type, body)
+            }
         });
 
         return true;
@@ -183,6 +193,7 @@ export abstract class IpcSocket {
                 this.close();
             } else {
                 ticket = (new Date()).valueOf();
+                this.send("ping", ticket);
             }
         }, 25000);
 
@@ -292,22 +303,6 @@ class GlobalWebIpcSocket extends IpcSocket {
         return this.last();
     }
 
-    ping(body: any) {
-        if (Object.isFrozen(this)) {
-            return false;
-        }
-
-        const { data, ws } = this;
-        if (ws.readyState > ws.OPEN) {
-            return false;
-        }
-
-        chunk(data, "ping", body);
-        drain(ws, data);
-
-        return true;
-    }
-
     send(type: MessageType, body: any) {
         if (Object.isFrozen(this)) {
             return false;
@@ -340,7 +335,6 @@ class WebIpcSocket extends IpcSocket {
         ws.on("close", () => this.close());
 
         ws.on("ping", data => {
-            ws.pong(data);
             this.emit("ping", JSON.parse(data.toString()));
         });
 
@@ -360,30 +354,11 @@ class WebIpcSocket extends IpcSocket {
         
         const { ws } = this;
         ws.removeAllListeners();
+        ws.on("error", () => {});
         ws.terminate();
 
         this.error = error;
         return this.last();
-    }
-
-    ping(body: any) {
-        if (Object.isFrozen(this)) {
-            return false;
-        }
-
-        const { data, ws } = this;
-        if (ws.readyState > ws.OPEN) {
-            return false;
-        }
-
-        if (ws.readyState === ws.OPEN) {
-            this.ping(JSON.stringify(body));
-        } else {
-            chunk(this.data, "ping", body);
-            drain(ws, data);
-        }
-
-        return true;
     }
 
     send(type: MessageType, body: any) {
@@ -392,6 +367,18 @@ class WebIpcSocket extends IpcSocket {
         }
 
         const { data, ws } = this;
+        if (ws.readyState === ws.OPEN) {
+            if (type === "ping") {
+                ws.ping(JSON.stringify(body))
+                return true;
+            }
+
+            if (type === "pong") {
+                ws.pong(JSON.stringify(body))
+                return true;
+            }
+        }
+
         if (ws.readyState > ws.OPEN) {
             return false;
         }
@@ -412,9 +399,10 @@ class NativeIpcSocket extends IpcSocket {
         this.socket = socket;
         this.decoder = decoder;
         this.protocols = proto;
-        
+
         decoder.on("data", data => this.push(data));
         socket.on("data", data => decoder.push(data));
+        socket.on("end", () => this.close());
         socket.on("error", ex => this.close(ex));
         socket.on("close", () => this.close());
         socket.resume();
@@ -432,15 +420,12 @@ class NativeIpcSocket extends IpcSocket {
         const { socket, decoder } = this;
         socket.removeAllListeners();
         decoder.removeAllListeners();
+        socket.on("error", () => {});
         socket.destroy();
         decoder.destroy();
 
         this.error = error;
         return this.last();
-    }
-
-    ping(body: any) {
-        return this.send("ping", body);
     }
 
     send(type: MessageType, body: any) {
@@ -466,10 +451,6 @@ class ErrorIpcSocket extends IpcSocket {
     }
 
     close() {
-        return false;
-    }
-
-    ping() {
         return false;
     }
 

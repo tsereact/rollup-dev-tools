@@ -15,7 +15,7 @@ const defaultPort = Number(process.env.PORT || "8380");
 const locks = new Set<any>();
 
 async function handlerInit() {
-    while (locks.size > 0) {
+    while (locks.size) {
         await new Promise<void>(x => unblock = x);
     }
 
@@ -126,20 +126,22 @@ export function start(options?: ServerOptions) {
     return listenPromise = Promise.resolve("");
 }
 
-export function block(lock?: any) {
+export function block(lock: any) {
     locks.add(lock);
     refresh();
 }
 
-export function refresh() {
+export function refresh(lock?: any) {
+    locks.delete(lock);
+
     if (handler) {
         handler = undefined;
         handlerPromise = undefined;
     }
 
-    if (locks.size < 1) {
+    if (!locks.size) {
         unblock();
     }
 
-    return locks.size < 1;
+    return !locks.size;
 }

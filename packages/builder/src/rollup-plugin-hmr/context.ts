@@ -1,3 +1,5 @@
+import type IpcConsole from "../core/IpcConsole";
+
 import IpcClient from "../core/IpcClient";
 import IpcSocket from "../core/IpcSocket";
 import IpcStateHub from "../core/IpcStateHub";
@@ -7,6 +9,8 @@ const ns = "https://github.com/tsereact/rollup-dev-tools";
 const hub = new IpcStateHub();
 const client = new IpcClient("", hub);
 const empty = [] as undefined[];
+
+let term: IpcConsole | undefined;
 
 async function resolvePort() {
     if (typeof fetch === "function" && typeof location === "object") {
@@ -42,7 +46,7 @@ client.connect = async function () {
     }
 
     port = await port;
-    return await IpcSocket.connect(port + "?hmr&log");
+    return await IpcSocket.connect(port + "?hmr&log&logInit&logShow");
 };
 
 function findGlobal(): any {
@@ -92,6 +96,7 @@ export class ModuleState {
     readonly self: string;
     readonly port: string;
 
+    console?: IpcConsole;
     state: any;
 
     constructor(ready: boolean, id: string, ver: number, hash: string, root: string, self: string, port: string, state?: any) {
@@ -165,22 +170,33 @@ export class ModuleState {
 
     freeze() {
         this.noAction();
-
+        term && term.detach(this);
+        
         Object.assign(this, { ready: false, state: undefined });
         Object.freeze(this);
     }
 
     async showLogs() {
+        if (Object.isFrozen(this)) {
+            return false;
+        }
+
         if (typeof document !== "object") {
             return false;
         }
 
-        const { attach } = await import("./showLogs");
-        if (Object.isFrozen(this)) {
-            return false;
+        if (term === undefined) {
+            const { IpcConsole } = await import("../core/IpcConsole");
+            if (Object.isFrozen(this) || !IpcConsole.isSupported()) {
+                return false;
+            }
+    
+            if (term === undefined) {
+                term = IpcConsole.create("rollup-ipc-console-log", ns + "#ipc");
+            }
         }
-        
-        attach(hub);
+
+        term.attach(this, hub);
 
         return true;
     }

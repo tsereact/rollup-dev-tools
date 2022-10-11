@@ -3,6 +3,10 @@ export function isRunMode() {
         return true;
     }
 
+    if (process.env.ROLLUP_WATCH === "true") {
+        return true;
+    }
+
     return false;
 }
 

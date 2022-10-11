@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 import fs from "fs/promises";
-import hmr from "@tsereact/rollup-dev-tools/plugin-hmr/state";
+import hmr from "@tsereact/rollup-dev-tools/builder/rollup-plugin-hmr/state";
 
 const styles = css`
     body {

@@ -31,7 +31,7 @@ export function webServer(webPath?: string, outPath?: string): Plugin | false {
             stablePaths.push(...paths);
             paths.length = 0;
 
-            if (refresh()) {
+            if (refresh(lock)) {
                 console.log("[WebServer]: %s", await start());
             }
         }
