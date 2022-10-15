@@ -100,7 +100,6 @@ class GlobSet extends Map<[pattern: string, prefix: string], GlobMatcher> {
         let plain = true;
         let prefix = [] as string[];
         let text = [] as string[];
-        console.log("---", state.tokens);
         for (const { type, value } of state.tokens) {
             switch (type) {
                 case "bos":
