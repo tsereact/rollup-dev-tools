@@ -10,6 +10,7 @@ import IpcSocketServer from "./IpcServer";
 import IpcStateHub from "./IpcStateHub";
 import IpcClient from "./IpcClient";
 import ScreenCapture from "./ScreenCapture";
+import { resolve } from "path";
 
 const empty: any[] = [];
 const defaultPort = 7180;
@@ -193,8 +194,16 @@ export function start(options?: ServerOptions) {
     }
 
     if (isWatchMode() || options) {
-        const { ROLLUP_IPC_PORT } = process.env;
+        let { ROLLUP_IPC_PORT } = process.env;
         if (ROLLUP_IPC_PORT) {
+            try {
+                const url = new URL(ROLLUP_IPC_PORT);
+                url.searchParams.set("project", "");
+                ROLLUP_IPC_PORT = url.toString();
+            } catch {
+                // don't care
+            }
+
             client.port = ROLLUP_IPC_PORT;
             client.sync();
 
@@ -256,16 +265,16 @@ export function waitForProjects(...projects: (string | Iterable<string>)[]) {
 }
 
 export function lockEnter(token: any = {}) {
-    return new Promise<any>(resolve => {
+    return new Promise<any>(done => {
         const ticket = {};
         const id = process.hrtime.bigint();
-        const lockReq = hashIt(process.cwd(), id);
+        const lockReq = hashIt(resolve(), id);
         hub.set(token, { lockReq });
 
         hub.on(ticket, (_, { lockAck }) => {
             if (lockAck === lockReq) {
                 hub.off(ticket);
-                resolve(token);
+                done(token);
             }
         });
     });

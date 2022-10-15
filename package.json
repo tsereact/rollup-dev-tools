@@ -7,9 +7,11 @@
     "packages/*"
   ],
   "scripts": {
-    "build:packages": "yarn workspaces foreach -ipv --include '@tsereact/rollup-plugin-*' --include '@tsereact/tool-*' exec rollup -c rollup.config.js"
+    "build": "ws-build -e @tsereact/builder",
+    "build:builder": "yarn workspace @tsereact/builder build"
   },
   "devDependencies": {
+    "@tsereact/builder": "workspace:*",
     "typescript": "^4.8.4"
   }
 }

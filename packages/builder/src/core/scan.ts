@@ -51,6 +51,7 @@ export interface Manifest {
     path: string;
     refs: Manifest[];
     deps: string[];
+    tags: string[];
 }
 
 function isObject(value: any) {
@@ -63,6 +64,7 @@ async function readManifest(dir: string) {
         path: "",
         refs: [],
         deps: [],
+        tags: [],
     };
 
     let hints: string[] = [];
@@ -72,7 +74,7 @@ async function readManifest(dir: string) {
         if (isObject(raw)) {
             manifest.path = dir;
 
-            const { name, devDependencies, dependencies, workspaces } = raw;
+            const { name, devDependencies, dependencies, workspaces, tags } = raw;
             if (typeof name === "string") {
                 manifest.name = name;
             }
@@ -88,6 +90,10 @@ async function readManifest(dir: string) {
 
             if (Array.isArray(workspaces)) {
                 hints = workspaces.filter(x => typeof x === "string");
+            }
+
+            if (Array.isArray(tags)) {
+                manifest.tags = tags.filter(x => x && typeof x === "string");
             }
 
             manifest.deps = [...new Set(manifest.deps)];

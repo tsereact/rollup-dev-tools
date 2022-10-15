@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { isAbsolute, relative, resolve } from "path";
+import { isAbsolute, parse, relative, resolve } from "path";
 
 const relx = /^\.\.?[\\/]/;
 const slashx = /[\\/]+/g;
@@ -17,7 +17,7 @@ export function pathToName(path: string) {
         return "npm:" + tail;
     }
 
-    const result = relativeStrict(process.cwd(), path);
+    const result = relativeStrict(resolve(), path);
     if (result) {
         return result;
     }
@@ -80,6 +80,11 @@ export function relativeStrict(from: string, to: string) {
     }
 
     return slashify(to);
+}
+
+export function entryName(...parts: string[]) {
+    const { dir, name } = parse(parts.join("/"));
+    return slashify(`${dir}/${name}`).replace(/(^[\\/]+|[\\/]+$)/g, "");
 }
 
 export function slashify(value: string) {

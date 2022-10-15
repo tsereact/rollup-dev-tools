@@ -99,25 +99,29 @@ class GlobSet extends Map<[pattern: string, prefix: string], GlobMatcher> {
         
         let plain = true;
         let prefix = [] as string[];
-        let text = "";
-        for (const token of state.tokens) {
-            if (token.type === "bos") {
-                continue;
+        let text = [] as string[];
+        console.log("---", state.tokens);
+        for (const { type, value } of state.tokens) {
+            switch (type) {
+                case "bos":
+                case "dot":
+                case "text":
+                    text.push(value);
+                    break;
+
+                case "slash":
+                    prefix.push(...text, "/");
+                    text.length = 0;
+                    break;
+
+                default:
+                    plain = false;
+                    break;
             }
 
-            if (token.type === "text") {
-                text = token.value;
-                continue;
+            if (!plain) {
+                break;
             }
-
-            if (token.type === "slash") {
-                prefix.push(text);
-                prefix.push("/");
-                continue;
-            }
-
-            plain = false;
-            break;
         }
 
         result = [matcher, prefix.join(""), plain];

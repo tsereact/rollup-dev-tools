@@ -6272,6 +6272,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "root-workspace-0b6124@workspace:."
   dependencies:
+    "@tsereact/builder": "workspace:*"
     typescript: ^4.8.4
   languageName: unknown
   linkType: soft

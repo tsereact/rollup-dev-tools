@@ -1,5 +1,7 @@
-import { spawn } from "child_process";
+import { spawn, spawnSync } from "child_process";
+import { resolve } from "path";
 import { captureScreen, registerProject, start, waitForProjects } from "../core/ipcMain";
+import { relativeStrict } from "../core/ref";
 import { Manifest, scanForPackages } from "../core/scan";
 
 function arrange(ws: Iterable<Manifest>, include: Set<string>, exclude: Set<string>) {
@@ -36,13 +38,35 @@ function arrange(ws: Iterable<Manifest>, include: Set<string>, exclude: Set<stri
     return result;
 }
 
+function test(manifest: Manifest, hints: string[]) {
+    const { tags } = manifest;
+    for (const hint of hints) {
+        if (hint === manifest.name) {
+            return true;
+        }
+
+        if (tags.indexOf(hint) >= 0) {
+            return true;
+        }
+
+        const base = resolve(hint);
+        if (manifest.path === base || relativeStrict(base, manifest.path)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 async function main() {
     let next: string[] | Set<string> | undefined;
+    let watch = false;
     const argv: string[] = [];
     const host: string[] = [];
     const port: string[] = [];
-    const include = new Set<string>();
     const exclude = new Set<string>();    
+    const include = new Set<string>();
+    const startup: string[] = [];
     const [,, ...cmdline] = process.argv;
     for (const arg of cmdline) {
         if (next) {
@@ -67,17 +91,33 @@ async function main() {
 
                 case "-c":
                     next = argv;
+                    break;
+
+                case "--watch":
+                    watch = true;
+                    break;
 
                 default:
-                    include.add(arg);
+                    startup.push(arg);
                     break;
             }
         }
     }
 
     const ws = await scanForPackages();
-    if (!include.size) {
-        ws.forEach(x => x.name && include.add(x.name));
+    if (startup.length) {
+        ws.forEach(x => {
+            if (x.name && test(x, startup)) {
+                include.add(x.name);
+            }
+        });
+    } else {
+        const base = resolve();
+        ws.forEach(x => {
+            if (x.name && (x.path === base || relativeStrict(base, x.path))) {
+                include.add(x.name);
+            }
+        });
     }
 
     const info: string[] = [];
@@ -86,47 +126,65 @@ async function main() {
         info.push(pkg.name);
     }
 
-    const listenPort = await start({
-        port: port.length ? Number(port.pop()) : undefined,
-        host: host.length ? host.pop() : undefined,
-    });
-
     console.log("Projects:", info.join(", "));
-    console.log("     IPC: Listening on port [ %s ]", listenPort);
 
-    captureScreen();
+    if (watch) {
+        const listenPort = await start({
+            port: port.length ? Number(port.pop()) : undefined,
+            host: host.length ? host.pop() : undefined,
+        });
+    
+        console.log("     IPC: Listening on port [ %s ]", listenPort);
+        console.log();
 
-    for (const [pkg, deps] of map) {
-        if (deps.length) {
-            console.log("%s: Waiting on [ %s ]", pkg.name, deps.join(", "));
-            await waitForProjects(deps);    
+        captureScreen();
+
+        for (const [pkg, deps] of map) {
+            if (deps.length) {
+                console.log("%s: Waiting on [ %s ]", pkg.name, deps.join(", "));
+                await waitForProjects(deps);    
+            }
+
+            const done = (error?: Error, code?: any) => {
+                if (error) {
+                    console.log("%s: Exited. [ error = %s ]", pkg.name, error.message);
+                }
+
+                if (code !== undefined) {
+                    console.log("%s: Exited. [ code = %s ]", pkg.name, code);
+                }
+
+                registerProject({}, pkg.name);
+            };
+
+            console.log("%s: Starting...", pkg.name);
+            const child = spawn(process.env.npm_execpath || "npm", ["watch", ...argv], {
+                cwd: pkg.path,
+                shell: true,
+                stdio: ["ignore", "pipe", "pipe"],
+            });
+
+            child.on("error", error => done(error));
+            child.on("exit", code => done(undefined, code));
+
+            const { stdout, stderr } = child;
+            stdout.pipe(process.stdout);
+            stderr.pipe(process.stdout);
         }
+    } else {
+        for (const [pkg] of map) {
+            try {
+                const code = spawnSync(process.env.npm_execpath || "npm", ["build", ...argv], {
+                    cwd: pkg.path,
+                    shell: true,
+                    stdio: "inherit",
+                });
 
-        const done = (error?: Error, code?: any) => {
-            if (error) {
+                console.log("%s: Exited. [ code = %s ]", pkg.name, code);
+            } catch (error: any) {
                 console.log("%s: Exited. [ error = %s ]", pkg.name, error.message);
             }
-
-            if (code !== undefined) {
-                console.log("%s: Exited. [ code = %s ]", pkg.name, code);
-            }
-
-            registerProject({}, pkg.name);
-        };
-
-        console.log("%s: Starting...", pkg.name);
-        const child = spawn(process.env.npm_execpath || "npm", ["watch", ...argv], {
-            cwd: pkg.path,
-            shell: true,
-            stdio: ["ignore", "pipe", "pipe"],
-        });
-
-        child.on("error", error => done(error));
-        child.on("exit", code => done(undefined, code));
-
-        const { stdout, stderr } = child;
-        stdout.pipe(process.stdout);
-        stderr.pipe(process.stdout);
+        }
     }
 }
 
