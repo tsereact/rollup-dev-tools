@@ -1,4 +1,4 @@
-import hmr from "@tsereact/rollup-dev-tools/plugin-hmr/state"
+import hmr from "@tsereact/builder/rollup-plugin-hmr/state";
 import { createServer, Server } from "http";
 
 interface ModuleState {
@@ -31,7 +31,7 @@ function init() {
     });
 
     console.info("loaded", hmr?.hash);
-    console.info("change this");
+    console.info("change this --- test");
 }
 
 hmr && hmr.ready && init();

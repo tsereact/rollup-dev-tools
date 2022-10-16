@@ -1,8 +1,10 @@
 import { defineConfig } from "rollup";
 
-import hmr from "@tsereact/rollup-dev-tools/plugin-hmr";
 import nodeResolve from "@rollup/plugin-node-resolve";
 import typescript from "@rollup/plugin-typescript";
+
+import hmr from "@tsereact/builder/rollup-plugin-hmr";
+import run from "@tsereact/builder/rollup-plugin-run";
 
 export default defineConfig({
     input: {
@@ -20,5 +22,10 @@ export default defineConfig({
         hmr(),
         typescript(),
         nodeResolve(),
+
+        run({
+            fork: "dist/index.mjs",
+            kill: false,
+        })
     ]
 });

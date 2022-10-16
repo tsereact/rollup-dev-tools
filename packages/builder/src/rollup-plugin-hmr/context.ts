@@ -66,9 +66,10 @@ function findGlobal(): any {
 }
 
 function doImport(self: string, next: string, tag: number) {
-    self = self.replace(/[^/]*(\/+|$)/g, "../");
+    let i = 0;
+    self = self.replace(/[^/]+[\\/]*/g, i++ > 0 ? "/.." : ".");
 
-    const baseUrl = new URL("_/" + self, import.meta.url);
+    const baseUrl = new URL(self + "/", import.meta.url);
     const url = new URL(next, baseUrl);
     url.hash = "#" + tag;
 

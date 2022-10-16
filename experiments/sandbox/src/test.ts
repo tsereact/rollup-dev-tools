@@ -1,3 +1,1 @@
-import autoChunk from "@tsereact/builder/rollup-plugin-auto-chunk";
-
-autoChunk();
+export default undefined;

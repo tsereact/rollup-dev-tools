@@ -1,6 +1,6 @@
 import type { Plugin } from "rollup";
 
-import { commit, start } from "../core/ipcMain";
+import { captureScreen, commit, isCapture, isMain, start } from "../core/ipcMain";
 import { walk } from "../rollup-tools/walk";
 import { isAbsolute, relative, resolve } from "path";
 import { hashIt, slashify, tag } from "../core/ref";
@@ -63,6 +63,12 @@ function hmr(): Plugin | false {
     const hashes = new Map<string, string>();
     return {
         name: "hmr",
+
+        buildStart() {
+            if (isMain() && !isCapture()) {
+                captureScreen();
+            }
+        },
 
         async resolveId(id, importer, opts) {
             if (id.startsWith(prefix)) {

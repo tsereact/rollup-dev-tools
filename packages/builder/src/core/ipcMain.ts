@@ -24,6 +24,7 @@ let logInit: any;
 let listenPromise: Promise<string> | undefined;
 let mainServer: Server | undefined;
 
+client.port = process.env.ROLLUP_IPC_PORT || "";
 hub.any = () => true;
 
 function handleRequest(req: IncomingMessage, res: ServerResponse) {
@@ -194,20 +195,19 @@ export function start(options?: ServerOptions) {
     }
 
     if (isWatchMode() || options) {
-        let { ROLLUP_IPC_PORT } = process.env;
-        if (ROLLUP_IPC_PORT) {
+        if (client.port) {
+            let port = client.port;
             try {
-                const url = new URL(ROLLUP_IPC_PORT);
+                const url = new URL(port);
                 url.searchParams.set("project", "");
-                ROLLUP_IPC_PORT = url.toString();
+                client.port = url.toString();
             } catch {
                 // don't care
             }
 
-            client.port = ROLLUP_IPC_PORT;
             client.sync();
 
-            return listenPromise = Promise.resolve(ROLLUP_IPC_PORT);
+            return listenPromise = Promise.resolve(port);
         }
 
         const { port, host, createServer } = options || {};
@@ -230,13 +230,12 @@ export async function shutdown() {
     }
 }
 
-export function isMain() {
-    if (client.port) {
-        return false
-    }
+export function isCapture() {
+    return !!capture;
+}
 
-    const { ROLLUP_IPC_PORT } = process.env;
-    return !!ROLLUP_IPC_PORT;
+export function isMain() {
+    return !client.port;
 }
 
 export function commit(token: any, state: any) {

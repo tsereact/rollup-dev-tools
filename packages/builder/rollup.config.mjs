@@ -27,6 +27,7 @@ export default defineConfig({
         "rollup-plugin-chunk-logger": "src/rollup-plugin-chunk-logger/index.ts",
         "rollup-plugin-chunk-optimizer": "src/rollup-plugin-chunk-optimizer/index.ts",
         "rollup-plugin-resolver": "src/rollup-plugin-resolver/index.ts",
+        "rollup-plugin-run": "src/rollup-plugin-run/index.ts",
         "rollup-plugin-web-server": "src/rollup-plugin-web-server/index.ts",
     },
 
@@ -92,7 +93,11 @@ export default defineConfig({
 
             async load(id) {
                 if (id.startsWith("\0mocks/self?")) {
-                    return "export const self = {}; export default self;";
+                    if (id.match(/[\\/]node_modules[\\/]xterm/)) {
+                        return `const __self = {}; export default __self;`;
+                    }
+
+                    return `const __self = typeof self === "object" ? self : undefined; export default __self;`;
                 }
 
                 if (isAbsolute(id) && id.endsWith(".css")) {

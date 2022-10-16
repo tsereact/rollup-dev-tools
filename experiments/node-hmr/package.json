@@ -2,7 +2,8 @@
     "name": "@experiments/node-hmr",
     "version": "1.0.0",
     "scripts": {
-        "build": "rollup -c rollup.build.js"
+        "build": "rollup -c rollup.config.mjs",
+        "watch": "rollup -c rollup.config.mjs --watch"
     },
     "devDependencies": {
         "@emotion/react": "^11.10.4",

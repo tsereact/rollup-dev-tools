@@ -11,6 +11,7 @@ export interface CallbackFunc {
 }
 
 export interface CommonOptions {
+    args?: string[];
     kill?: boolean | CallbackFunc;
     monitor?: CallbackFunc;
     restart?: boolean | CallbackFunc;
@@ -27,14 +28,14 @@ export interface SpawnBasedOptions extends CommonOptions {
     options?: SpawnOptions;
 }
 
-function execute(cmd: ForkBasedOptions | SpawnBasedOptions): ChildProcess {
+function execute(cmd: ForkBasedOptions | SpawnBasedOptions, args: string[] = []): ChildProcess {
     if ("fork" in cmd) {
         const { fork: modulePath, options } = cmd;
-        return fork(modulePath, options || {});
+        return fork(modulePath, args, options || {});
     }
 
     const { spawn: cmdline, options } = cmd;
-    return spawn(cmdline, options || {});
+    return spawn(cmdline, args, options || {});
 }
 
 function make(cmd: string | ForkBasedOptions | SpawnBasedOptions) {
@@ -67,10 +68,10 @@ function run(cmd: string | ForkBasedOptions | SpawnBasedOptions): Plugin | false
 
     let active: any;
     let shutdown = async () => {};
-    const { kill, monitor, restart } = make(cmd);
+    const { args, kill, monitor, restart } = make(cmd);
     const start = () => {
         const state: State = active = [];
-        const process = execute(make(cmd));
+        const process = execute(make(cmd), args);
         const disconnected = new Promise<void>(resolve => {
             if (process.connected) {
                 process.on("disconnect", resolve);
