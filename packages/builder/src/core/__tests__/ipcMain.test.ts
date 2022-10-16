@@ -16,7 +16,7 @@ afterAll(async () => {
 describe("ipcMain", () => {
     test("captureScreen", async () => {
         captureScreen();
-        console.log("some text");
+        console.info("some text");
         captureScreenFlush();
         captureScreenOff();
 

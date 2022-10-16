@@ -32,7 +32,7 @@ const jsx =
 function init() {
     if (hmr) {
         const newState = new Date().toISOString();
-        console.log("[HMR]: oldState = %s   newState = %s", hmr.state, newState);
+        console.info("[HMR]: oldState = %s   newState = %s", hmr.state, newState);
         hmr.state = newState;
 
         hmr.onUpdate("import");

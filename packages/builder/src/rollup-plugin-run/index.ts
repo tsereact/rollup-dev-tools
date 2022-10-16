@@ -89,7 +89,7 @@ function run(cmd: string | ForkBasedOptions | SpawnBasedOptions): Plugin | false
                 state.error = error;
                 resolve();
 
-                console.log("Command error: %s [ err = %s ]", cmd, error.message);
+                console.info("Command error: %s [ err = %s ]", cmd, error.message);
             });
         });
 

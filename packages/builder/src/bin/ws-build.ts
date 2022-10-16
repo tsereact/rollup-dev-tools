@@ -126,7 +126,7 @@ async function main() {
         info.push(pkg.name);
     }
 
-    console.log("Projects:", info.join(", "));
+    console.info("Projects:", info.join(", "));
 
     if (watch) {
         const listenPort = await start({
@@ -134,30 +134,30 @@ async function main() {
             host: host.length ? host.pop() : undefined,
         });
     
-        console.log("     IPC: Listening on port [ %s ]", listenPort);
-        console.log();
+        console.info("     IPC: Listening on port [ %s ]", listenPort);
+        console.info();
 
         captureScreen();
 
         for (const [pkg, deps] of map) {
             if (deps.length) {
-                console.log("%s: Waiting on [ %s ]", pkg.name, deps.join(", "));
+                console.info("%s: Waiting on [ %s ]", pkg.name, deps.join(", "));
                 await waitForProjects(deps);    
             }
 
             const done = (error?: Error, code?: any) => {
                 if (error) {
-                    console.log("%s: Exited. [ error = %s ]", pkg.name, error.message);
+                    console.info("%s: Exited. [ error = %s ]", pkg.name, error.message);
                 }
 
                 if (code !== undefined) {
-                    console.log("%s: Exited. [ code = %s ]", pkg.name, code);
+                    console.info("%s: Exited. [ code = %s ]", pkg.name, code);
                 }
 
                 registerProject({}, pkg.name);
             };
 
-            console.log("%s: Starting...", pkg.name);
+            console.info("%s: Starting...", pkg.name);
             const child = spawn(process.env.npm_execpath || "npm", ["watch", ...argv], {
                 cwd: pkg.path,
                 shell: true,
@@ -180,9 +180,9 @@ async function main() {
                     stdio: "inherit",
                 });
 
-                console.log("%s: Exited. [ code = %s ]", pkg.name, code);
+                console.info("%s: Exited. [ code = %s ]", pkg.name, code);
             } catch (error: any) {
-                console.log("%s: Exited. [ error = %s ]", pkg.name, error.message);
+                console.info("%s: Exited. [ error = %s ]", pkg.name, error.message);
             }
         }
     }

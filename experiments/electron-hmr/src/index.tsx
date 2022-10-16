@@ -31,13 +31,13 @@ const jsx =
 </React.StrictMode>;
 
 async function list() {
-    console.log("readdir():", await fs.readdir("."));
+    console.info("readdir():", await fs.readdir("."));
 }
 
 function init() {
     if (hmr) {
         const newState = new Date().toISOString();
-        console.log("[HMR]: oldState = %s   newState = %s", hmr.state, newState);
+        console.info("[HMR]: oldState = %s   newState = %s", hmr.state, newState);
         hmr.state = newState;
 
         hmr.onUpdate("import");

@@ -33,7 +33,7 @@ function linkerAgent(): Plugin {
                     code.push(`import * as ${prefix}${name} from ${JSON.stringify(fn)};`);
                     code.push(`export { ${prefix}${name} };`);
 
-                    console.log("[LINK]: %s +", facet, pathToName(fn));
+                    console.info("[LINK]: %s +", facet, pathToName(fn));
                 }
             }
 

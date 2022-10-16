@@ -4,13 +4,13 @@ import { isWatchMode } from "./modes";
 
 import { flat } from "./scan";
 import { hashIt } from "./ref";
-
-import IpcSocket from "./IpcSocket";
-import IpcSocketServer from "./IpcServer";
-import IpcStateHub from "./IpcStateHub";
-import IpcClient from "./IpcClient";
-import ScreenCapture from "./ScreenCapture";
 import { resolve } from "path";
+
+import IpcClient from "./IpcClient";
+import IpcServer from "./IpcServer";
+import IpcSocket from "./IpcSocket";
+import IpcStateHub from "./IpcStateHub";
+import ScreenCapture from "./ScreenCapture";
 
 const empty: any[] = [];
 const defaultPort = 7180;
@@ -134,7 +134,7 @@ async function listenInit(port = defaultPort, host = "localhost", createServer: 
             map.set(id, id = map.size);
         }
 
-        console.log("---", id, state);
+        console.info("---", id, state);
     });*/
 
     lockInit(hub);
@@ -145,7 +145,7 @@ async function listenInit(port = defaultPort, host = "localhost", createServer: 
         fqdn = hostname;
     }
 
-    const ipc = new IpcSocketServer();
+    const ipc = new IpcServer();
     const server = mainServer = await createServer();
     server.on("request", handleRequest);
     server.on("upgrade", ipc.handleUpgrade);

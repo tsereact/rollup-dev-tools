@@ -18,6 +18,7 @@ export default defineConfig({
         "servers": "src/servers.ts",
         "bin/ws-build": "src/bin/ws-build.ts",
         "core/IpcConsole": "src/core/IpcConsole.ts",
+        "core/IpcSocket": "src/core/IpcSocket.ts",
 
         "rollup-plugin-hmr": "src/rollup-plugin-hmr/index.ts",
         "rollup-plugin-hmr/context": "src/rollup-plugin-hmr/context.ts",

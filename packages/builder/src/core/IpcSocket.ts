@@ -20,8 +20,22 @@ function isNode() {
     return typeof node === "string";
 }
 
+let nodeStuff = () => {
+    const result = importNodeStuff();
+    nodeStuff = () => result;
+    return result;
+};
+
+async function importNodeStuff() {
+    const stream = import("stream");
+    const http = import("http");
+    const https = import("https");
+    const { Readable } = await stream;
+    return { Readable, http: await http, https: await https };
+}
+
 async function createDecoder() {
-    const { Readable } = await import("./IpcSocketRefs");
+    const { Readable } = await nodeStuff();
     return new Readable({
         encoding: "utf-8",
         read() {},
@@ -32,7 +46,7 @@ async function request(port: string, protocol?: string) {
     const url = new URL(port);
     url.protocol = url.protocol.replace("ws", "http");
 
-    const { http, https } = await import("./IpcSocketRefs");
+    const { http, https } = await nodeStuff();
     const { request } = url.protocol === "https" ? https : http;
     const decoder = await createDecoder();
     const req = request(url, {

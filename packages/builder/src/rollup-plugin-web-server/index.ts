@@ -32,7 +32,7 @@ export function webServer(webPath?: string, outPath?: string): Plugin | false {
             paths.length = 0;
 
             if (refresh(lock)) {
-                console.log("[WebServer]: %s", await start());
+                console.info("[WebServer]: %s", await start());
             }
         }
     };

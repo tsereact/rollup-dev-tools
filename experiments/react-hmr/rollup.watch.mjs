@@ -9,6 +9,8 @@ import url from "@rollup/plugin-url";
 
 import chunkLogger from "@tsereact/builder/rollup-plugin-chunk-logger";
 import chunkOptimizer from "@tsereact/builder/rollup-plugin-chunk-optimizer";
+import linker from "@tsereact/builder/rollup-plugin-linker";
+import resolver from "@tsereact/builder/rollup-plugin-resolver";
 import hmr from "@tsereact/builder/rollup-plugin-hmr";
 import webServer from "@tsereact/builder/rollup-plugin-web-server";
 
@@ -28,6 +30,20 @@ export default defineConfig({
 
     plugins: [
         hmr(),
+
+        resolver(x => {
+            if (x.isResolved("src/**")) {
+                return x.default();
+            }
+
+            if (x.isResolved("npm:*/**")) {
+                return x.link("npm")
+            }
+
+            if (x.isResolved("ws:*/**")) {
+                return x.link("ws")
+            }
+        }),
 
         typescript(),
         nodeResolve(),
@@ -65,6 +81,7 @@ export default defineConfig({
         }),
 
         chunkLogger(),
+        linker("yarn watch:link"),
         webServer(),
     ]
 });

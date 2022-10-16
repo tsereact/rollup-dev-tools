@@ -15,7 +15,7 @@ function init() {
     }
 
     if (!state.server) {
-        console.log("createServer()");
+        console.info("createServer()");
 
         const server = state.server = createServer();       
         server.listen(8180);
@@ -30,8 +30,8 @@ function init() {
         res.end();
     });
 
-    console.log("loaded", hmr?.hash);
-    console.log("change this");
+    console.info("loaded", hmr?.hash);
+    console.info("change this");
 }
 
 hmr && hmr.ready && init();
